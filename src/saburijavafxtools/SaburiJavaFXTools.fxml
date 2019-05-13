@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox id="vBox" spacing="5" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="saburijavafxtools.SaburiJavaFXToolsController">
+    <children>
+        <GridPane hgap="5" vgap="5">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <Label fx:id="lblFileName" text="File Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="txtFileName" minWidth="500" promptText="File Name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Button fx:id="btnBrowse" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Button fx:id="btnImport" text="Import" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+            <Button fx:id="btnSave" visible="false" text="Save" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+            <Label fx:id="lblObjectName" text="Object Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="txtObjectName" promptText="Object Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+            <Label fx:id="lblOutputDirectory" text="Output Location" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="txtOutputDirectory" minWidth="300" promptText="Output Location" text="C:\Saburi Tools" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="btnOutputDirectory" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+           
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+            
+        </GridPane>
+        <HBox spacing="10.0">
+            <Label text="Generation Options" /> 
+            <ComboBox fx:id="cboFiles" prefWidth="130.0" promptText="Select File" />
+            <CheckBox fx:id="chkOpenFile" mnemonicParsing="false" text="Auto Open File(s)" />
+            <CheckBox fx:id="chkGenerateMenus" text="Generate Menus" />
+            <CheckBox fx:id="chkGenerateViewUI" text="Generate View UI" />
+            <ComboBox fx:id="cboMenuType" prefWidth="130.0" promptText="Select Type" />
+            <TextField fx:id="txtParentMenuID" promptText="Parent Menu ID" />
+            <padding>
+                <Insets bottom="10.0" left="10.0" />
+            </padding>
+        </HBox>
+        <TableView id="Tools" fx:id="tblSaburiTools" prefWidth="950" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets left="10.0" />
+            </padding>
+            <columns>
+                <TableColumn id="Tools" fx:id="tbcFieldName" minWidth="120" text="Field Name" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="fieldName" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="tbcCaption" minWidth="120" text="Caption" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="caption" />
+                    </cellValueFactory>
+                    <!--    <cellFactory><FormattedTableCellFactory alignment="center">
+                    </FormattedTableCellFactory>
+                    </cellFactory> -->
+                </TableColumn>
+                <TableColumn fx:id="tbcDataType" minWidth="50" text="Data Type" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="dataType" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="tbcReferences" minWidth="120" text="References" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="references" />
+                    </cellValueFactory>
+                </TableColumn>
+                
+                <TableColumn fx:id="tbcSubFields" minWidth="50" text="Sub Fields" editable="true" >
+                    <cellValueFactory>
+                        <PropertyValueFactory property="subFields" />
+                    </cellValueFactory>
+                </TableColumn>
+             
+                <TableColumn fx:id="tbcKey" minWidth="50" text="Key" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="key" />
+                    </cellValueFactory>
+                </TableColumn>
+             
+                <TableColumn fx:id="tbcSaburiKey" minWidth="50" text="Saburi Key" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="saburiKey" />
+                    </cellValueFactory>
+                </TableColumn>
+                
+                
+              <TableColumn fx:id="tbcMapping" minWidth="50" text="Mapping" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="mapping" />
+                    </cellValueFactory>
+                </TableColumn>
+             
+                <TableColumn fx:id="tbcSize" minWidth="10" text="Size">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="size" />
+                    </cellValueFactory>
+                </TableColumn>
+                
+                <TableColumn fx:id="tbcEnumerated" minWidth="40" text="Enumerated" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="enumerated" />
+                    </cellValueFactory>
+                </TableColumn>
+             
+                <TableColumn fx:id="tbcNullable" minWidth="20" text="Nullable" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="nullable" />
+                    </cellValueFactory>
+                </TableColumn>
+                
+                <TableColumn fx:id="tbcEnumClass" minWidth="20" text="enumClass" editable="true">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="enumClass" />
+                    </cellValueFactory>
+                </TableColumn>
+                
+            </columns>
+         
+            <sortOrder>
+                <fx:reference source="tbcFieldName" />
+            </sortOrder>
+        </TableView>
+        
+        <AnchorPane>
+            <Button fx:id="btnGenerate" text="Generate" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="6.0" />
+            <Button fx:id="btnClose" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="6.0" />
+        </AnchorPane>
+    </children>
+    
+</VBox>

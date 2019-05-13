@@ -1,0 +1,17 @@
+
+<Label fx:id = "cboName" GridPane.rowIndex = "0"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "Caption">
+<ComboBox fx:id = "cboName" GridPane.rowIndex = "0"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboPSCNo" GridPane.rowIndex = "1"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "PSCNo">
+<ComboBox fx:id = "cboPSCNo" GridPane.rowIndex = "1"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboItemCategoryID" GridPane.rowIndex = "2"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "Item Category">
+<ComboBox fx:id = "cboItemCategoryID" GridPane.rowIndex = "2"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboItemCode" GridPane.rowIndex = "3"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "Item Code">
+<ComboBox fx:id = "cboItemCode" GridPane.rowIndex = "3"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboQuantity" GridPane.rowIndex = "4"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "Quantity">
+<ComboBox fx:id = "cboQuantity" GridPane.rowIndex = "4"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboAgent" GridPane.rowIndex = "5"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "Agent">
+<ComboBox fx:id = "cboAgent" GridPane.rowIndex = "5"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboSyncStatus" GridPane.rowIndex = "6"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "Sync Status">
+<ComboBox fx:id = "cboSyncStatus" GridPane.rowIndex = "6"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
+<Label fx:id = "cboRecordDateTime" GridPane.rowIndex = "7"GridPane.columnIndex = "0"  fx:id = "" fx:id = "" text = "RecordDateTime">
+<ComboBox fx:id = "cboRecordDateTime" GridPane.rowIndex = "7"GridPane.columnIndex = "1"  fx:id = "" fx:id = "">
