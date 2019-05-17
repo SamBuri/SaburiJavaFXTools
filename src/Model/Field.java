@@ -1248,7 +1248,7 @@ public class Field {
             case ImageView:
                 line = " <Label id=\"" + id + "\" fx:id=\"lbl" + getFieldName() + "\" "
                         + "minWidth=\"100\" text=\"" + getCaption() + "\" GridPane.columnIndex=\"" + columnIndex + "\" GridPane.rowIndex=\"" + rowIndex + "\" />\n";
-                line += " <HBox alignment=\"center\" spacing=\"10\" GridPane.columnIndex=\"" + (columnIndex + 1) + "\" GridPane.rowIndex=\"" + rowIndex + "\""
+                line += " <HBox alignment=\"center\" spacing=\"4\" GridPane.columnIndex=\"" + (columnIndex + 1) + "\" GridPane.rowIndex=\"" + rowIndex + "\""
                         + " fx:id=\"hbx" + getFieldName() + "\" id=\"" + id + "\">\n"
                         + "               \n"
                         + "               <VBox alignment=\"center\" prefHeight=\"150.0\" prefWidth=\"150.0\" styleClass=\"image-pane\" "
@@ -1256,10 +1256,10 @@ public class Field {
                         + "                    <ImageView id=\"" + id + "\" fx:id=\"" + getControlName() + "\" fitHeight=\"150\" fitWidth=\"150.0\" pickOnBounds=\"true\" preserveRatio=\"true\" style=\"-fx-opacity: 45;\" />\n"
                         + "                \n"
                         + "                </VBox>\n"
-                        + "                <VBox alignment=\"center\" spacing=\"10\">\n"
-                        + "                    <Button fx:id=\"btnBrowse" + getFieldName() + "\" id=\"" + id + "\" minWidth=\"100\" text=\"Browse\" /> \n"
-                        + "                    <Button fx:id=\"btnCapture" + getFieldName() + "\" id=\"" + id + "\" minWidth=\"100\" text=\"Capture\" />\n"
-                        + "                    <Button fx:id=\"btnClear" + getFieldName() + "\" id=\"" + id + "\" minWidth=\"100\" text=\"Clear\" /> \n"
+                        + "                <VBox alignment=\"center\" spacing=\"10\" styleClass=\"image-buttons\">\n"
+                        + "                    <Button fx:id=\"btnBrowse" + getFieldName() + "\" id=\"" + id + "\" minWidth=\"60\" text=\"Browse\" /> \n"
+                        + "                    <Button fx:id=\"btnCapture" + getFieldName() + "\" id=\"" + id + "\" minWidth=\"60\" text=\"Capture\" />\n"
+                        + "                    <Button fx:id=\"btnClear" + getFieldName() + "\" id=\"" + id + "\" minWidth=\"60\" text=\"Clear\" /> \n"
                         + "                </VBox>\n"
                         + "            </HBox>";
                 break;

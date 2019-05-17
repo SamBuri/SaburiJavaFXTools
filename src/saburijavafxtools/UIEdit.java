@@ -63,7 +63,7 @@ public class UIEdit {
     }
 
     private String makeBody() throws Exception {
-        String body = "<GridPane vgap =\"8\" hgap=\"40\">\n"
+        String body = "<GridPane vgap =\"4\" hgap=\"10\">\n"
                 + "<padding>\n"
                 + "<Insets bottom=\"10.0\" left=\"10.0\" right=\"10.0\" top=\"10.0\" />\n"
                 + "</padding>\n";
