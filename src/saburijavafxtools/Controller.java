@@ -141,18 +141,13 @@ public class Controller {
                 if (field.getEnumerated()) {
                     comboLoadings += field.getControlName() + ".setItems(FXCollections.observableArrayList(" + field.getReferences() + ".values()));";
                 } else {
-                    menuLoadCalls += " cmiSelect" + field.getFieldName() + ".setOnAction(e->{\n"
-                            + "                try {\n"
-                            + "                    getSelectedItem(new " + field.getReferencesDA() + "(),\"View\", \"" + field.getCaption() + "\", 400, 450, " + field.getControlName() + ",false);\n"
-                            + "                } catch (IOException ex) {\n"
-                            + "                    errorMessage(ex);\n"
-                            + "                }\n"
-                            + "            });";
-                    if (field.getReferences().equalsIgnoreCase("LookupData")) {
 
+                    if (field.getReferences().equalsIgnoreCase("LookupData")) {
                         lookupDataLoadings += " loadLookupDataCombo(" + field.getControlName() + ", ObjectNames." + field.getFieldName().toUpperCase() + ");\n";
+                        menuLoadCalls += "selectLookupData(cmiSelect" + field.getFieldName() + ", ObjectNames." + field.getFieldName().toUpperCase() + ", \"view\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", false);";
                     } else {
                         comboLoadings += "loadDaCombo(new " + field.getReferences() + "DA().get(), " + field.getControlName() + ");\n";
+                        menuLoadCalls += "selectItem(cmiSelect" + field.getFieldName() + ", new " + field.getReferences() + "DA(), \"View\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", true);";
 
                     }
 

@@ -1058,8 +1058,8 @@ public class Field {
         String controlName = this.getControlName();
         if (isCollection()) {
 
-            return "List<" + getReferencesDA() + "> " + variableName + " = " + controlName + ".getItems();\n"
-                    + variableName + ".remove(" + variableName + ".size() - 1);\n";
+            return "List<" + getReferencesDA() + "> " + variableName + "DAs = " + controlName + ".getItems();\n"
+                    + variableName + "DAs.removeIf((p) -> p.getDBEntity() == null);\n";
 
         }
         if (isReferance()) {
@@ -1107,8 +1107,9 @@ public class Field {
                 propertInitialised = "this." + variableName + " = new " + this.daProperty("Object") + "(" + objectVariableName + "." + getCall() + ");\n";
             } else {
                 propertInitialised = "this." + variableName + "= " + objectVariableName + "." + getCall() + ";\n";
+                propertInitialised+="if(this." + variableName + "!= null){";
                 propertInitialised += "this." + getReferencesVariableID() + " = new " + this.daProperty("Object") + "(" + variableName + ".getId());\n";
-                propertInitialised += "this." + displayVariableName + " = new " + this.daProperty() + "(" + variableName + ".getDisplayKey());\n";
+                propertInitialised += "this." + displayVariableName + " = new " + this.daProperty() + "(" + variableName + ".getDisplayKey());\n}\n";
             }
         } else if (dataType.get().equalsIgnoreCase("Image")) {
             propertInitialised += "this." + variableName + " = " + objectVariableName + "." + getCall() + ";\n"
