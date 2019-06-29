@@ -888,10 +888,10 @@ public class Field {
             }
         } else if (isReferance()) {
             if (enumerated.get()) {
-                return "private SimpleObjectProperty " + variableName + " =  new SimpleObjectProperty(this,\"" + variableName + "\");\n";
+                return "private final SimpleObjectProperty " + variableName + " =  new SimpleObjectProperty(this,\"" + variableName + "\");\n";
             } else {
-                return "private SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n"
-                        + "private SimpleObjectProperty " + referencesVariableID + " =  new SimpleObjectProperty(this,\"" + referencesVariableID + "\");\n"
+                return "private final SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n"
+                        + "private final SimpleObjectProperty " + referencesVariableID + " =  new SimpleObjectProperty(this,\"" + referencesVariableID + "\");\n"
                         + "private " + references.get() + " " + variableName + ";\n";
             }
         } else {
@@ -899,26 +899,26 @@ public class Field {
             if (type.equalsIgnoreCase("Date") || type.equalsIgnoreCase("DateTime")
                     || type.equalsIgnoreCase("LocalDate") || type.equalsIgnoreCase("LocalDateTime")
                     || type.equalsIgnoreCase("Object")) {
-                return "private SimpleObjectProperty " + variableName + " =  new SimpleObjectProperty(this,\"" + variableName + "\");\n"
-                        + "private SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n";
+                return "private final SimpleObjectProperty " + variableName + " =  new SimpleObjectProperty(this,\"" + variableName + "\");\n"
+                        + "private final SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n";
             } else if (type.equalsIgnoreCase("bool") || type.equalsIgnoreCase("boolean")) {
-                return "private SimpleBooleanProperty " + variableName + " =  new SimpleBooleanProperty(this,\"" + variableName + "\");\n";
+                return "private final SimpleBooleanProperty " + variableName + " =  new SimpleBooleanProperty(this,\"" + variableName + "\");\n";
             } else if (type.equalsIgnoreCase("String")) {
-                return "private SimpleStringProperty " + variableName + " =  new SimpleStringProperty(this,\"" + variableName + "\");\n";
+                return "private final SimpleStringProperty " + variableName + " =  new SimpleStringProperty(this,\"" + variableName + "\");\n";
             } else if (type.equalsIgnoreCase("int")) {
-                return "private SimpleIntegerProperty " + variableName + " =  new SimpleIntegerProperty(this,\"" + variableName + "\");\n";
+                return "private final SimpleIntegerProperty " + variableName + " =  new SimpleIntegerProperty(this,\"" + variableName + "\");\n";
             } else if (type.equalsIgnoreCase("float")) {
-                return "private SimpleFloatProperty " + variableName + " =  new SimpleFloatProperty(this,\"" + variableName + "\");\n"
-                        + "private SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n";
+                return "private final SimpleFloatProperty " + variableName + " =  new SimpleFloatProperty(this,\"" + variableName + "\");\n"
+                        + "private final SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n";
             } else if (type.equalsIgnoreCase("double")) {
-                return "private SimpleDoubleProperty " + variableName + " =  new SimpleDoubleProperty(this,\"" + variableName + "\");\n"
-                        + "private SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n";
+                return "private final SimpleDoubleProperty " + variableName + " =  new SimpleDoubleProperty(this,\"" + variableName + "\");\n"
+                        + "private final SimpleStringProperty " + displayVariableName + " =  new SimpleStringProperty(this,\"" + displayVariableName + "\");\n";
 
             } else if (type.equalsIgnoreCase("Image")) {
                 return "private byte[] " + variableName + ";\n"
                         + "private ImageView " + getControlName() + " = new ImageView();\n";
             } else {
-                return "private SimpleStringProperty " + variableName + " =  new SimpleObjectProperty(this,\"" + variableName + "\");\n";
+                return "private final SimpleStringProperty " + variableName + " =  new SimpleObjectProperty(this,\"" + variableName + "\");\n";
             }
         }
     }
@@ -995,7 +995,6 @@ public class Field {
             } else {
                 addIfNotExists(list, "import javafx.scene.control.MenuItem");
                 addIfNotExists(list, "import dbaccess." + getReferencesDA());
-                addIfNotExists(list, "import java.io.IOException");
                 if (references.get().equalsIgnoreCase("LookupData")) {
                     addIfNotExists(list, "import helpers.ObjectNames");
                 }
@@ -1104,26 +1103,28 @@ public class Field {
             propertInitialised = "";
         } else if (isReferance()) {
             if (getEnumerated()) {
-                propertInitialised = "this." + variableName + " = new " + this.daProperty("Object") + "(" + objectVariableName + "." + getCall() + ");\n";
+                propertInitialised = "this." + variableName + ".set(" + objectVariableName + "." + getCall() + ");\n";
             } else {
                 propertInitialised = "this." + variableName + "= " + objectVariableName + "." + getCall() + ";\n";
                 propertInitialised+="if(this." + variableName + "!= null){";
-                propertInitialised += "this." + getReferencesVariableID() + " = new " + this.daProperty("Object") + "(" + variableName + ".getId());\n";
-                propertInitialised += "this." + displayVariableName + " = new " + this.daProperty() + "(" + variableName + ".getDisplayKey());\n}\n";
+                propertInitialised += "this." + getReferencesVariableID() + ".set(" + variableName + ".getId());\n";
+                propertInitialised += "this." + displayVariableName + ".set(" + variableName + ".getDisplayKey());\n}\n";
             }
         } else if (dataType.get().equalsIgnoreCase("Image")) {
             propertInitialised += "this." + variableName + " = " + objectVariableName + "." + getCall() + ";\n"
                     + "this." + getControlName() + " = FXUIUtils.setTableSizeImage(" + getControlName() + ", " + objectVariableName + "." + getCall() + ");";
         } else {
-            propertInitialised = "this." + variableName + " = new " + this.daProperty() + "(" + objectVariableName + "." + getCall() + ");\n";
+            propertInitialised = "this." + variableName + ".set(" + objectVariableName + "." + getCall() + ");\n";
         }
+        
+        
         if (getDataType().equalsIgnoreCase("float") || getDataType().equalsIgnoreCase("double")) {
-            propertInitialised += "this." + displayVariableName + " = new " + this.daProperty(displayDataType) + "(formatNumber(" + objectVariableName + "." + getCall() + "));\n";
+            propertInitialised += "this." + displayVariableName + ".set(formatNumber(" + objectVariableName + "." + getCall() + "));\n";
 
         } else if (dataType.get().equalsIgnoreCase("Date") || dataType.get().equalsIgnoreCase("LocalDate")) {
-            propertInitialised += "this." + displayVariableName + " = new " + this.daProperty(displayDataType) + "(formatDate(" + objectVariableName + "." + getCall() + "));\n";
+            propertInitialised += "this." + displayVariableName + ".set(formatDate(" + objectVariableName + "." + getCall() + "));\n";
         } else if (dataType.get().equalsIgnoreCase("DateTime") || dataType.get().equalsIgnoreCase("LocalDateTime")) {
-            propertInitialised += "this." + displayVariableName + " = new " + this.daProperty(displayDataType) + "(formatDateTime(" + objectVariableName + "." + getCall() + "));\n";
+            propertInitialised += "this." + displayVariableName + ".set(formatDateTime(" + objectVariableName + "." + getCall() + "));\n";
         }
         return propertInitialised;
     }
@@ -1222,7 +1223,7 @@ public class Field {
                 + "minWidth=\"100\" text=\"" + getCaption() + "\" GridPane.columnIndex=\"" + columnIndex + "\" GridPane.rowIndex=\"" + rowIndex + "\" />\n";
 
         line += "<" + getControlType() + " fx:id = \"" + getControlName() + "\" id = \"" + id + "\"  GridPane.rowIndex = \"" + rowIndex + "\" "
-                + "GridPane.columnIndex = \"" + (columnIndex + 1) + "\" minWidth=\"100\" ";
+                + "GridPane.columnIndex = \"" + (columnIndex + 1) + "\" ";
 
         switch (getControlType()) {
             case DatePicker:
@@ -1232,7 +1233,7 @@ public class Field {
                 line += "/>";
                 break;
             case ComboBox:
-                line += "promptText = \"Select " + getCaption() + "\" prefWidth=\"185.0\"";
+                line += "promptText = \"Select " + getCaption() + "\" minWidth=\"185.0\"";
                 if (getEnumerated()) {
                     line += "/>";
                 } else {
@@ -1268,16 +1269,16 @@ public class Field {
                 line += " text = \"" + getCaption() + "\"/>";
                 break;
             case TextField:
-                line += "promptText = \"Enter " + getCaption() + "\"/>";
+                line += "minWidth=\"100\" promptText = \"Enter " + getCaption() + "\"/>";
                 break;
             case TextArea:
-                line += "promptText = \"Enter " + getCaption() + "\"/>";
+                line += "minWidth=\"100\" promptText = \"Enter " + getCaption() + "\"/>";
                 break;
             case TableView:
                 return "";
 
             default:
-                line += "promptText = \"Enter " + getCaption() + "\"/>";
+                line += "minWidth=\"100\" promptText = \"Enter " + getCaption() + "\"/>";
                 break;
         }
 
@@ -1292,7 +1293,7 @@ public class Field {
                 + "minWidth=\"100\" text=\"" + getCaption() + "\" GridPane.columnIndex=\"" + columnIndex + "\" GridPane.rowIndex=\"" + rowIndex + "\" />\n";
 
         line += "<" + getControlType() + " fx:id = \"" + getControlName() + "\" id = \"" + id + "\"  GridPane.rowIndex = \"" + rowIndex + "\" "
-                + "GridPane.columnIndex = \"" + (columnIndex + 1) + "\" minWidth=\"100\" ";
+                + "GridPane.columnIndex = \"" + (columnIndex + 1) + "\" ";
 
         switch (getControlType()) {
             case DatePicker:
@@ -1302,7 +1303,7 @@ public class Field {
                 line += "/>";
                 break;
             case ComboBox:
-                line += "promptText = \"Select " + getCaption() + "\" prefWidth=\"185.0\"";
+                line += "promptText = \"Select " + getCaption() + "\" minWidth=\"185.0\"";
                 line += ">\n<contextMenu>\n"
                         + "  <ContextMenu fx:id =\"cmuSelect" + getFieldName() + "\" id = \"" + id + "\">\n"
                         + " <items>\n"
@@ -1333,10 +1334,10 @@ public class Field {
                         + "            </HBox>";
                 break;
             case Label:
-                line += " text = \"" + getCaption() + "\"/>";
+                line += " minWidth=\"100\"  text = \"" + getCaption() + "\"/>";
                 break;
             case TextField:
-                line += "promptText = \"Enter " + getCaption() + "\">";
+                line += " minWidth=\"100\" promptText = \"Enter " + getCaption() + "\">";
                 line += "\n<contextMenu>\n"
                         + "  <ContextMenu fx:id =\"cmuSelect" + getFieldName() + "\" id = \"" + id + "\">\n"
                         + " <items>\n"
@@ -1347,7 +1348,7 @@ public class Field {
                         + "</" + getControlType() + "> ";
                 break;
                  case TextArea:
-                line += "promptText = \"Enter " + getCaption() + "\">";
+                line += " minWidth=\"100\" promptText = \"Enter " + getCaption() + "\">";
                 line += "\n<contextMenu>\n"
                         + "  <ContextMenu fx:id =\"cmuSelect" + getFieldName() + "\" id = \"" + id + "\">\n"
                         + " <items>\n"

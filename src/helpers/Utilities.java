@@ -180,7 +180,7 @@ public class Utilities {
 
                     }
                     case 5: {
-                        return new Field(values[0].trim(), values[1].trim(), values[2].trim(), values[3].trim(), 
+                        return new Field(values[0].trim(), values[1].trim(), values[2].trim(), values[3].trim(),
                                 values[4].trim());
 
                     }
@@ -215,7 +215,7 @@ public class Utilities {
                     }
                     case 12: {
                         return new Field(values[0].trim(), values[1].trim(), values[2].trim(), values[3].trim(), values[4].trim(),
-                                values[5].trim(), values[6].trim(), values[7].trim(), Integer.valueOf(values[8].trim()), Boolean.valueOf(values[9].trim()), Boolean.valueOf(values[10].trim()),values[11].trim());
+                                values[5].trim(), values[6].trim(), values[7].trim(), Integer.valueOf(values[8].trim()), Boolean.valueOf(values[9].trim()), Boolean.valueOf(values[10].trim()), values[11].trim());
 
                     }
                     default:
@@ -278,6 +278,20 @@ public class Utilities {
                 + "</padding>\n"
                 + "<columns>".concat(tableColumn).concat("</columns>\n").concat(contextMenu)
                 + "</TableView>\n";
+    }
+
+    public static boolean isInteger(Object o) {
+        if (o == null) {
+
+            return false;
+        } else {
+            try {
+                Integer.parseInt(o.toString());
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
     }
 
 }

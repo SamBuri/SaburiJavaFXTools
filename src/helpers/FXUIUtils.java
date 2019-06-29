@@ -217,6 +217,20 @@ public class FXUIUtils {
         }
         return enteredDate;
     }
+      
+      public static int getInt(TextField field, String string) throws Exception {
+        String enteredString = field.getText().trim();
+        if (isNullOrEmpty(enteredString)) {
+            field.requestFocus();
+            throw new Exception("You must enter: " + string + "!");
+        } else if (!Utilities.isInteger(enteredString)) {
+            field.requestFocus();
+            throw new Exception("Invalid Integer value: " + enteredString + " for " + string + "!");
+        } else {
+            return Integer.parseInt(enteredString);
+        }
+
+    }
      
       public static ImageView getImage(ImageView imageView, byte[] bytes, int width, int height, boolean mAspectRation, boolean mSmoothness){
           InputStream in = new ByteArrayInputStream(bytes);

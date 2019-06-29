@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640" prefWidth="960" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="saburijavafxtools.SceneController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720" prefWidth="1300" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="saburijavafxtools.SceneController">
     <top>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -29,7 +29,7 @@
                         <Menu id="Tools" mnemonicParsing="false" text="Tools" />
                         
                         <Menu id="Settings" mnemonicParsing="false" text="Settings">
-                            
+                            <MenuItem fx:id="mniSetting" mnemonicParsing="false" text="Settings" />
                         </Menu>
                         
                     </menus>

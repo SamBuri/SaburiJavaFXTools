@@ -43,7 +43,9 @@ public class Entity extends CodeGenerator {
 
     public String makeEntityImports() {
         String imp = "import javax.persistence.Entity;\n"
-                + "import javax.persistence.Id;\n";
+                + "import javax.persistence.Id;\n"
+                + "import org.hibernate.envers.Audited;\n"
+                + "import org.hibernate.envers.RelationTargetAuditMode;\n";
         List<String> imports = new ArrayList();
         this.fields.forEach((t) -> {
             t.entityImports().forEach(i -> addIfNotExists(imports, i));
@@ -179,7 +181,7 @@ public class Entity extends CodeGenerator {
         String methods = otherMethods() + this.overriddenID() + this.overriddenDisplayKey();
         JavaClass javaClass = new JavaClass("entities", objectName, this.makeEntityImports(),
                 this.makeAnnotedFields(), constructor, this.makeProperties(), methods);
-        return javaClass.makeClass("DBEntity", "@Entity");
+        return javaClass.makeClass("DBEntity", "@Entity\n@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)");
     }
 
 }

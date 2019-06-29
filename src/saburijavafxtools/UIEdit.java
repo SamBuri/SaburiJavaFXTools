@@ -6,6 +6,7 @@
 package saburijavafxtools;
 
 import Model.Field;
+import Model.Settings;
 import helpers.Utilities;
 import static helpers.Utilities.addIfNotExists;
 import java.util.ArrayList;
@@ -70,10 +71,10 @@ public class UIEdit {
 
         FilteredList<Field> subListFields = new FilteredList<>(FXCollections.observableList(fields), e -> true);
         subListFields.setPredicate(FieldPredicates.hasSubFields());
-
-        int endValue = 15;
+         Settings settings = new Settings().xmlDecode();
+        int endValue = settings.getLineBreak();
         if (!subListFields.isEmpty()) {
-            endValue = 6;
+            endValue = settings.getMiniLineBreak();
         }
         int size = fields.size();
         int x = 0;

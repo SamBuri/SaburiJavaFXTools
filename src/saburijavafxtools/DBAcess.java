@@ -70,10 +70,12 @@ public class DBAcess extends CodeGenerator {
         String imp = "import entities." + objectName + ";"
                 + "import javafx.beans.property.*;\n"
                 + "import java.util.ArrayList;\n"
+                + "import entities.AppRevisionEntity;\n"
                 + "import java.util.List;\n"
                 + "import javafx.util.Pair;\n"
                 + "import helpers.SearchColumn;\n"
-                + "import helpers.SearchColumn.SearchDataTypes;\n";
+                + "import helpers.SearchColumn.SearchDataTypes;\n"
+                + "import org.hibernate.envers.RevisionType;\n";
         List<String> imports = new ArrayList();
         fields.forEach((t) -> {
             t.daImports().forEach(i -> addIfNotExists(imports, i));
@@ -142,7 +144,8 @@ public class DBAcess extends CodeGenerator {
                 makeInitials += field.getVariableName();
             } else if (field.isReferance() && !field.getEnumerated()) {
                 construtorLine += field.getReferencesDA() + " " + Utilities.getVariableName(field.getFieldName() + "DA ");
-                makeInitials += "(" + field.getReferences() + ")" + Utilities.getVariableName(field.getFieldName() + "DA ") + ".getDBEntity()";
+//                makeInitials += "(" + field.getReferences() + ")" + Utilities.getVariableName(field.getFieldName() + "DA ") + ".getDBEntity()";
+                makeInitials += Utilities.getVariableName(field.getReferencesDA()) + "!= null ? (" + field.getReferences() + ") " + Utilities.getVariableName(field.getReferencesDA()) + ".getDBEntity() : null";
             } else {
                 if (field.isHelper()) {
                     try {
@@ -344,23 +347,13 @@ public class DBAcess extends CodeGenerator {
                     + "        return this." + objectVariableName + ".getDisplayKey();\n"
                     + "    }";
 
-            String daGetValue = "public List<" + objectNameDA + "> get(String columName, Object value) {\n"
-                    + "        List<" + objectName + "> data= super.find(" + objectName + ".class, columName, value);\n"
-                    + "        List <" + objectNameDA + "> list = new ArrayList<>();\n"
-                    + "        data.forEach(da ->list.add(new " + objectNameDA + "(da)));\n"
+            String daGetValue = " public List<" + objectNameDA + "> get(String columName, Object value) {\n"
+                    + "        List<StudentDA> list = new ArrayList<>();\n"
+                    + "        super.selectQuery(" + objectName + ".class, columName, value).forEach(da -> list.add(new " + objectNameDA + "((" + objectName + ") da)));\n"
+                    + "        if (entityManager != null) {\n"
+                    + "            entityManager.close();\n"
+                    + "        }\n"
                     + "        return list;\n"
-                    + "    }";
-
-            String daGetPairValues = "public List<Pair<String, Object>> keyValuePairs(String columName, Object value){\n"
-                    + "         List<Pair<String, Object>> pairs = new ArrayList<>();\n"
-                    + "          this.get(columName,value).forEach((t) ->  pairs.add(t.keyValuePair()));\n"
-                    + "         return pairs;\n"
-                    + "    }";
-
-            String daGetPairs = "public List<Pair<String, Object>> keyValuePairs(){\n"
-                    + "         List<Pair<String, Object>> pairs = new ArrayList<>();\n"
-                    + "         this.get().forEach((t) ->  pairs.add(t.keyValuePair()));\n"
-                    + "         return pairs;\n"
                     + "    }";
 
             String mConvert = " public static List<" + objectName + "> get" + objectName + "List(List<" + objectNameDA + "> " + Utilities.getVariableName(objectNameDA) + "s){\n"
@@ -400,15 +393,15 @@ public class DBAcess extends CodeGenerator {
 
             String getObjectName = getObjectFromDB();
 
-            String dagetAll = "  @Override\npublic List<" + superClass + "> get() {\n"
-                    + "List<" + superClass + "> list = new ArrayList<>();\n"
-                    + "List<" + objectName + "> datas = super.find(" + objectName + ".class);\n"
-                    + "datas.forEach((data) -> {\n"
-                    + "list.add(new " + objectNameDA + "(data));\n"
-                    + "});\n"
-                    + "return list;\n"
-                    + "}\n"
-                    + "";
+            String dagetAll = " @Override\n"
+                    + "    public List<" + superClass + "> get() {\n"
+                    + "        List<" + superClass + "> list = new ArrayList<>();\n"
+                    + "        selectQuery(" + objectName + ".class).forEach(o -> list.add(new " + objectNameDA + "((" + objectName + ") o)));\n"
+                    + "        if (entityManager != null) {\n"
+                    + "            entityManager.close();\n"
+                    + "        }\n"
+                    + "        return list;\n"
+                    + "    }";
 
             String daget = "public " + objectNameDA + " get(String " + primaryKeyVariableName + ") throws Exception {\n"
                     + "       " + objectName + " o" + objectName + " = get" + objectName + "(" + primaryKeyVariableName + ");\n"
@@ -438,11 +431,38 @@ public class DBAcess extends CodeGenerator {
                     + "        " + objectVariableName + "s.forEach(s -> dbAccesses.add(new " + objectNameDA + "(s)));\n"
                     + "        return dbAccesses;\n"
                     + "    }";
+            String revisions = " @Override\n"
+                    + "    public List<DBAccess> getRevisions() {\n"
+                    + "        try {\n"
+                    + "\n"
+                    + "            List<Object[]> list = getEntityRevisions(" + objectName + ".class);\n"
+                    + "            List<DBAccess> dBAccesses = new ArrayList<>();\n"
+                    + "            list.forEach(e -> {\n"
+                    + "\n"
+                    + "                " + objectNameDA + " " + objectNameDAVariableName + " = new " + objectNameDA + "((" + objectName + ") e[0]);\n"
+                    + "                " + objectNameDAVariableName + ".revisionEntity = (AppRevisionEntity) e[1];\n"
+                    + "                " + objectNameDAVariableName + ".oRevisionType = (RevisionType) e[2];\n"
+                    + "                " + objectNameDAVariableName + ".initRevProprties();\n"
+                    + "                " + objectNameDAVariableName + ".searchColumns.addAll(" + objectNameDAVariableName + ".getRevSearchColumns());\n"
+                    + "                dBAccesses.add(" + objectNameDAVariableName + ");\n"
+                    + "\n"
+                    + "            });\n"
+                    + "\n"
+                    + "            return dBAccesses;\n"
+                    + "        } catch (Exception e) {\n"
+                    + "            throw e;\n"
+                    + "        } finally {\n"
+                    + "            if (entityManager == null) {\n"
+                    + "                entityManager.close();\n"
+                    + "            }\n"
+                    + "        }\n"
+                    + "\n"
+                    + "    }";
 
             String daNextIDHelper = getNextIDHelper();
             String daNextPrimaryKey = getNextIDColumn();
             return equals + hashCode + initialiseProperties() + makeSearchColumn() + dagetSearchColumns + getID + getDisplayKey + dConvert + mConvert + daSave + daUpdate + daDelete + getObjectName + dagetAllObject + dagetAll
-                    + daget + daGetValue + daGetPairs + daGetPairValues + todaList + toDBAccesList + daMax + daMax1 + daNextIDHelper + daNextPrimaryKey + getByColName + "\n";
+                    + daget + daGetValue + todaList + toDBAccesList + daMax + daMax1 + daNextIDHelper + daNextPrimaryKey + getByColName + revisions + "\n";
         } catch (Exception ex) {
             Logger.getLogger(DBAcess.class.getName()).log(Level.SEVERE, null, ex);
             return null;
