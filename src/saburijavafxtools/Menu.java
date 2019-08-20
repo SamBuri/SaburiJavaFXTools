@@ -61,15 +61,19 @@ public class Menu {
                     + "</items>\n"
                     + "</SplitMenuButton>";
         }
+        String searchMenu = "new SearchItem(new " + objectName + "DA(), \"" + objectName + "\", \"" + objectName + "\", false),\n" +
+"            new SearchItem(new " + objectName + "DA(), Revision, \"" + objectName + "\", \"" + objectName + "\", false)";
 
         String menuFields = "@FXML private " + menuName + " " + addMenu + ", " + updateMenu + ", " + viewMenu + ";\n";
 
         menu += fxmlMenu;
+        menu+="\n\n\\***********************Add to SearchObjects***************************************************/";
+        menu+=searchMenu;
         menu += "\n\n****************************add SceneController.java*************************************************************\n";
         menu += menuFields;
         menu += "editMenuItemClick(" + addMenu + ", \"" + objectName + "\", \"" + objectName + "\", FormMode.Save);\n";
         menu += "editMenuItemClick(" + updateMenu + ", \"" + objectName + "\", \"" + objectName + "\", FormMode.Update);\n";
-        menu += "ViewMenuItemClick(" + viewMenu + ", new " + objectName + "DA(), \"" + objectName + "\", \"" + objectName + "\",false, true);\n";
+        menu += "viewMenuItemClick(" + viewMenu + ", new " + objectName + "DA(), \"" + objectName + "\", \"" + objectName + "\",false, true);\n";
         return menu;
     }
 

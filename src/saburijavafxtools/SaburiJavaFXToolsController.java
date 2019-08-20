@@ -520,7 +520,7 @@ public class SaburiJavaFXToolsController implements Initializable {
                     pairs = new Pair[]{sqlPair};
                     break;
                 default:
-                    pairs = new Pair[]{entityPair, daFilePair, controllerPair, fxlPair, sqlPair};
+                    pairs = new Pair[]{entityPair, daFilePair, controllerPair, fxlPair, menuPair, sqlPair};
 
                     break;
 

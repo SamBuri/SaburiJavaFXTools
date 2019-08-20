@@ -644,7 +644,10 @@ public class Field {
                 fieldAnnotation += "@Enumerated\n";
 
             }
-            column += "@Column(name = \"" + variableName + "\", updatable = false, length = " + size.get() + ", nullable = false)";
+            fieldAnnotation += "@NotNull(message =  \"The field: " + getCaption() + " cannot be null\")\n";
+            fieldAnnotation += "@Size(max =  " + getSize() + ", message =  \"The field: " + getCaption() + " size cannot be greater than " + getSize() + "\")\n";
+            column += "@Column(updatable = false)";
+
         } else if (isCollection()) {
 
             if (isNullOrEmpty(mapping.get())) {
@@ -658,10 +661,11 @@ public class Field {
                     + "                @JoinColumn(name = \"" + Utilities.getVariableName(getReferences()) + "ID\", nullable = false)})";
 
         } else if (isReferance() && !isCollection()) {
+            if (!nullable.get()) {
+                fieldAnnotation += "@NotNull(message =  \"The field: " + getCaption() + " cannot be null\")\n";
+            }
             if (enumerated.get()) {
                 fieldAnnotation += "@Enumerated\n";
-
-                column += "@Column(name = \"" + variableName + "\")";
 
             } else {
 
@@ -674,42 +678,49 @@ public class Field {
 
                 }
 
-                column += "@JoinColumn(name = \"" + variableName.concat("ID") + "\"";
+                column = "@JoinColumn(name = \"" + variableName.concat("ID") + "\"";
                 column += ",foreignKey = @ForeignKey(name = \"fk" + fieldName.get().concat("ID") + objectName + "\")";
 
                 if (key.get().equalsIgnoreCase("Unique")) {
                     column += ",unique = true";
                 }
-                if (!nullable.get()) {
-                    column += ",nullable = false";
-                }
                 column += ")";
+                if (!nullable.get()) {
+                    fieldAnnotation += "@NotEmpty(message =  \"The field: " + getCaption() + " cannot be blank\")\n";
+                }
+
                 fieldAnnotation += "@" + mapping.get() + "\n";
 
             }
         } else if (saburiKey.get().equalsIgnoreCase(Saburikeys.ID_Helper.name())) {
-            column += "@Column(name = \"" + variableName + "\", updatable = false)";
+            column = "@Column(updatable = false)";
         } else if (dataType.get().equalsIgnoreCase("String")) {
+            fieldAnnotation += "@Size(max =  " + getSize() + ", message =  \"The field: " + getCaption() + " size cannot be greater than " + getSize() + "\")\n";
 
-            column += column += "@Column(name = \"" + variableName + "\", length = " + size.get();
-            if (key.get().equalsIgnoreCase("Unique")) {
-                column += ",unique = true";
+            column += "@Column(";
+            if (!isReferance()) {
+                column = "length =  " + getSize() + ")";
             }
 
-            if (!nullable.get()) {
-                column += ",nullable = false";
+            if (key.get().equalsIgnoreCase("Unique")) {
+                column += ", unique = true";
             }
             column += ")";
+            if (!nullable.get()) {
+                fieldAnnotation += "@NotEmpty(message =  \"The field: " + getCaption() + " cannot be empty\")\n";
+            }
+
         } else if (dataType.get().equalsIgnoreCase("LocalDate") || dataType.get().equalsIgnoreCase("LocalDateTime")) {
 
             if (!nullable.get()) {
                 column += "@Column(name = \"" + variableName + "\",nullable = false)";
+                fieldAnnotation += "@NotNull(message =\"The column \' )\n";
             }
         } else if (dataType.get().equalsIgnoreCase("Image")) {
             fieldAnnotation += "@Lob\n";
 
             if (!nullable.get()) {
-                column += "@Column(name = \"" + variableName + "\",nullable = false)";
+                fieldAnnotation += "@NotNull(message =  \"The field: " + getCaption() + " cannot be null\")\n";
             }
 
         }
@@ -735,6 +746,9 @@ public class Field {
             addIfNotExists(list, "import javax.persistence." + mapping.get());
 
         } else if (isReferance()) {
+            if (!nullable.get()) {
+                addIfNotExists(list, "import javax.validation.constraints.NotNull");
+            }
             if (enumerated.get()) {
                 if (isNullOrEmpty(getEnumClass())) {
                     addIfNotExists(list, "import helpers.CommonEnums." + references.get());
@@ -742,7 +756,6 @@ public class Field {
                     addIfNotExists(list, "import helpers." + getEnumClass() + "." + references.get());
                 }
                 addIfNotExists(list, "import javax.persistence.Enumerated");
-                addIfNotExists(list, "import javax.persistence.Column");
 
             } else {
 
@@ -761,13 +774,27 @@ public class Field {
             }
         } else if (dataType.get().equalsIgnoreCase("String")) {
             addIfNotExists(list, "import javax.persistence.Column");
+            addIfNotExists(list, "import javax.validation.constraints.Size");
+            if (key.get().equalsIgnoreCase("Unique")) {
+                addIfNotExists(list, "import javax.persistence.Column");
+            }
 
-        } else if (dataType.get().equalsIgnoreCase("LocalDate")) {
-            addIfNotExists(list, "import java.time.LocalDate");
-        } else if (dataType.get().equalsIgnoreCase("LocalDateTime")) {
-            addIfNotExists(list, "import java.time.LocalDateTime");
-        } else if (dataType.get().equalsIgnoreCase("Image")) {
-            addIfNotExists(list, "import javax.persistence.Lob");
+            if (!nullable.get()) {
+                addIfNotExists(list, "import javax.validation.constraints.NotEmpty");
+            }
+
+        } else {
+            if (!nullable.get()) {
+                addIfNotExists(list, "import javax.validation.constraints.NotNull");
+            }
+            if (dataType.get().equalsIgnoreCase("LocalDate")) {
+                addIfNotExists(list, "import java.time.LocalDate");
+            } else if (dataType.get().equalsIgnoreCase("LocalDateTime")) {
+                addIfNotExists(list, "import java.time.LocalDateTime");
+            } else if (dataType.get().equalsIgnoreCase("Image")) {
+                addIfNotExists(list, "import javax.persistence.Lob");
+
+            }
 
         }
         return list;
@@ -1106,7 +1133,7 @@ public class Field {
                 propertInitialised = "this." + variableName + ".set(" + objectVariableName + "." + getCall() + ");\n";
             } else {
                 propertInitialised = "this." + variableName + "= " + objectVariableName + "." + getCall() + ";\n";
-                propertInitialised+="if(this." + variableName + "!= null){";
+                propertInitialised += "if(this." + variableName + "!= null){";
                 propertInitialised += "this." + getReferencesVariableID() + ".set(" + variableName + ".getId());\n";
                 propertInitialised += "this." + displayVariableName + ".set(" + variableName + ".getDisplayKey());\n}\n";
             }
@@ -1116,8 +1143,7 @@ public class Field {
         } else {
             propertInitialised = "this." + variableName + ".set(" + objectVariableName + "." + getCall() + ");\n";
         }
-        
-        
+
         if (getDataType().equalsIgnoreCase("float") || getDataType().equalsIgnoreCase("double")) {
             propertInitialised += "this." + displayVariableName + ".set(formatNumber(" + objectVariableName + "." + getCall() + "));\n";
 
@@ -1347,7 +1373,7 @@ public class Field {
                         + " </contextMenu>\n"
                         + "</" + getControlType() + "> ";
                 break;
-                 case TextArea:
+            case TextArea:
                 line += " minWidth=\"100\" promptText = \"Enter " + getCaption() + "\">";
                 line += "\n<contextMenu>\n"
                         + "  <ContextMenu fx:id =\"cmuSelect" + getFieldName() + "\" id = \"" + id + "\">\n"
@@ -1360,7 +1386,7 @@ public class Field {
                 break;
             case TableView:
                 return "";
-             
+
             default:
                 break;
         }

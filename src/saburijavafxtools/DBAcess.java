@@ -348,7 +348,7 @@ public class DBAcess extends CodeGenerator {
                     + "    }";
 
             String daGetValue = " public List<" + objectNameDA + "> get(String columName, Object value) {\n"
-                    + "        List<StudentDA> list = new ArrayList<>();\n"
+                    + "        List<" + objectNameDA + "> list = new ArrayList<>();\n"
                     + "        super.selectQuery(" + objectName + ".class, columName, value).forEach(da -> list.add(new " + objectNameDA + "((" + objectName + ") da)));\n"
                     + "        if (entityManager != null) {\n"
                     + "            entityManager.close();\n"
@@ -375,7 +375,7 @@ public class DBAcess extends CodeGenerator {
                     + "\n"
                     + "}\n"
                     + "";
-            String daUpdate = " public boolean update() {\n"
+            String daUpdate = " public boolean update() throws Exception{\n"
                     + "return super.merge(this." + objectVariableName + ");\n"
                     + "\n"
                     + "}\n"
