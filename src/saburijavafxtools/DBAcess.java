@@ -170,7 +170,6 @@ public class DBAcess extends CodeGenerator {
 //                makeInitials += field.getVariableName();
             } else if (field.isReferance() && !field.getEnumerated()) {
                 if (i == 0) {
-                    makeInitials += "(" + field.getReferences() + ")" + Utilities.getVariableName(field.getFieldName() + "DA ") + ".getDBEntity()";
                     makeInitials += field.getVariableNameDA() + "!= null ? (" + field.getReferences() + ") " + field.getVariableNameDA() + ".getDBEntity() : null";
                 } else {
 
@@ -364,6 +363,10 @@ public class DBAcess extends CodeGenerator {
                     + "        return " + objectVariableName + ".getId().hashCode();\n"
                     + "            }";
 
+            String objectNameGet = "public "+objectName+" get"+objectName+"(){\n"
+                    + "        return this."+objectVariableName+";\n"
+                    + "    }";
+
             String dagetSearchColumns = " @Override\n"
                     + "    public List<SearchColumn> getSearchColumns() {\n"
                     + "       return this.searchColumns;\n"
@@ -493,7 +496,7 @@ public class DBAcess extends CodeGenerator {
 
             String daNextIDHelper = getNextIDHelper();
             String daNextPrimaryKey = getNextIDColumn();
-            return equals + hashCode + initialiseProperties() + makeSearchColumn() + dagetSearchColumns + getID + getDisplayKey + dConvert + mConvert + daSave + daUpdate + daDelete + getObjectName + dagetAllObject + dagetAll
+            return equals + hashCode + initialiseProperties() + makeSearchColumn() + dagetSearchColumns + getID + getDisplayKey + dConvert + mConvert + daSave + daUpdate + daDelete + getObjectName + objectNameGet+ dagetAllObject + dagetAll
                     + daget + daGetValue + todaList + toDBAccesList + daMax + daMax1 + daNextIDHelper + daNextPrimaryKey + getByColName + revisions + "\n";
         } catch (Exception ex) {
             Logger.getLogger(DBAcess.class.getName()).log(Level.SEVERE, null, ex);

@@ -48,7 +48,6 @@ public class Controller {
     private String imports() {
 
         String imp = "import java.net.URL;\n"
-                + "import java.io.IOException;\n"
                 + "import java.util.ResourceBundle;\n"
                 + "import javafx.fxml.FXML;\n"
                 + "import static helpers.FXUIUtils.*;\n"
@@ -204,7 +203,7 @@ public class Controller {
         }
 
         methodBody += initProperties + imageButtonActions + setControlIDInInitialiser() + editColumnMethodCall + menuLoadCalls;
-        return " @Override\n" + Utilities.makeTryMethod("public", "void", "initialize", "URL url, ResourceBundle rb", methodBody, "IOException");
+        return " @Override\n" + Utilities.makeTryMethod("public", "void", "initialize", "URL url, ResourceBundle rb", methodBody);
     }
 
     private String save() {

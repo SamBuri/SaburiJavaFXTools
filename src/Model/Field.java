@@ -726,7 +726,7 @@ public class Field {
 
             if (!nullable.get()) {
                 column += "@Column(name = \"" + variableName + "\",nullable = false)";
-                fieldAnnotation += "@NotNull(message =\"The column \' )\n";
+                fieldAnnotation += "@NotNull(message =\"The field: " + getCaption() + " cannot be null\")\n";
             }
         } else if (dataType.get().equalsIgnoreCase("Image")) {
             fieldAnnotation += "@Lob\n";
@@ -1265,8 +1265,8 @@ public class Field {
             case CheckBox:
                 return getControlName() + ".setSelected(false);\n";
             case TableView:
-               
-                return getControlName() + ".getItems().clear();\n"+"addRow(" + getControlName() + ", new " + getReferencesDA() + "());\n";
+
+                return getControlName() + ".getItems().clear();\n" + "addRow(" + getControlName() + ", new " + getReferencesDA() + "());\n";
             default:
                 return getControlName() + ".clear();\n";
         }
@@ -1465,8 +1465,8 @@ public class Field {
             return "";
         }
     }
-    
-     public String NumberFormatter() {
+
+    public String NumberFormatter() {
         String type = getDataType();
         if (isHelper()) {
             return "";
@@ -1605,8 +1605,6 @@ public class Field {
                 + "            " + getControlName() + ".getItems().set(focusedCell.getRow(), " + getVariableName() + "DA);\n"
                 + "            " + getControlName() + ".edit(focusedCell.getRow(), focusedCell.getTableColumn());\n"
                 + "\n"
-                + "        } catch (IOException e) {\n"
-                + "            errorMessage(e);\n"
                 + "        } catch (Exception e) {\n"
                 + "            errorMessage(e);\n"
                 + "        }\n"

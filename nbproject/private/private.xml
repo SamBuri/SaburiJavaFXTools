@@ -5,7 +5,12 @@
         <group>
             <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/DBAcess.java</file>
             <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/Controller.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/SaburiJavaFXToolsController.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/CodeGenerator.java</file>
             <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/Model/Field.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/helpers/Utilities.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/UIEdit.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/Entity.java</file>
         </group>
     </open-files>
 </project-private>

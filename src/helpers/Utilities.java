@@ -283,7 +283,7 @@ public class Utilities {
     }
 
     public static String makeTable(String objectName, String tableColumn, String contextMenu) {
-        return "<TableView fx:id=\"tbl" + objectName + "\" id = \"" + objectName + "\" VBox.vgrow=\"ALWAYS\" minHeight=\"450\" minWidth=\"600\">\n"
+        return "<TableView fx:id=\"tbl" + objectName + "\" id = \"" + objectName + "\" VBox.vgrow=\"ALWAYS\" minHeight=\"300\" minWidth=\"450\">\n"
                 + "<padding>\n"
                 + "<Insets bottom=\"10.0\" left=\"10.0\" right=\"10.0\" top=\"10.0\" />\n"
                 + "</padding>\n"
