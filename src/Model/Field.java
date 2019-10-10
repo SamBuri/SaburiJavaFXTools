@@ -13,8 +13,6 @@ import static helpers.Utilities.addIfNotExists;
 import static helpers.Utilities.isNullOrEmpty;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.*;
 
 /**
@@ -631,21 +629,7 @@ public class Field {
     }
 
     public String referencesDAGetter() {
-        return "public " + getReferences() + "DA get" + getFieldName() + "DA() {\n"
-                + "        if (this." + variableName + " == null) {\n"
-                + "            return new " + getReferences() + "DA();\n"
-                + "        } else {\n"
-                + "            return new " + getReferences() + "DA(this." + variableName + ");\n"
-                + "        }\n"
-                + "    }\n"
-                + "\n"
-                + "    public Pair<String, Object> get" + getFieldName() + "Pair() {\n"
-                + "        if (this.get" + getFieldName() + "DA() == null) {\n"
-                + "            return new Pair<>(\"\", \"\");\n"
-                + "        } else {\n"
-                + "            return this.get" + getFieldName() + "DA().keyValuePair();\n"
-                + "        }\n"
-                + "    }";
+        return Utilities.makeMethod("public", getReferencesDA(), "get"+getFieldName()+"DA", "", "return this."+variableName+"!=null? new "+getReferencesDA()+"(this."+variableName+"):null;");
     }
 
     public String fiedAnnotations(String objectName, String primaryKey) {
@@ -763,9 +747,9 @@ public class Field {
             }
             if (enumerated.get()) {
                 if (isNullOrEmpty(getEnumClass())) {
-                    addIfNotExists(list, "import helpers.CommonEnums." + references.get());
+                    addIfNotExists(list, "import utils.CommonEnums." + references.get());
                 } else {
-                    addIfNotExists(list, "import helpers." + getEnumClass() + "." + references.get());
+                    addIfNotExists(list, "import utils." + getEnumClass() + "." + references.get());
                 }
                 addIfNotExists(list, "import javax.persistence.Enumerated");
 
@@ -818,9 +802,9 @@ public class Field {
             if (isReferance()) {
                 if (enumerated.get()) {
                     if (isNullOrEmpty(getEnumClass())) {
-                        addIfNotExists(list, "import helpers.CommonEnums." + references.get());
+                        addIfNotExists(list, "import utils.CommonEnums." + references.get());
                     } else {
-                        addIfNotExists(list, "import helpers." + getEnumClass() + "." + references.get());
+                        addIfNotExists(list, "import utils." + getEnumClass() + "." + references.get());
                     }
 
                 } else {
@@ -834,9 +818,9 @@ public class Field {
         } else if (isReferance()) {
             if (enumerated.get()) {
                 if (isNullOrEmpty(getEnumClass())) {
-                    addIfNotExists(list, "import helpers.CommonEnums." + references.get());
+                    addIfNotExists(list, "import utils.CommonEnums." + references.get());
                 } else {
-                    addIfNotExists(list, "import helpers." + getEnumClass() + "." + references.get());
+                    addIfNotExists(list, "import utils." + getEnumClass() + "." + references.get());
                 }
 
             } else {
@@ -845,17 +829,17 @@ public class Field {
             }
         } else if (dataType.get().equalsIgnoreCase("LocalDate")) {
             addIfNotExists(list, "import java.time.LocalDate");
-            addIfNotExists(list, "import static helpers.Utilities.formatDate");
+            addIfNotExists(list, "import static utils.Utilities.formatDate");
         } else if (dataType.get().equalsIgnoreCase("LocalDateTime")) {
             addIfNotExists(list, "import java.time.LocalDateTime");
-            addIfNotExists(list, "import static helpers.Utilities.formatDateTime");
+            addIfNotExists(list, "import static utils.Utilities.formatDateTime");
 
         } else if (dataType.get().equalsIgnoreCase("double") || dataType.get().equalsIgnoreCase("float")) {
-            addIfNotExists(list, "import static helpers.Utilities.formatNumber");
+            addIfNotExists(list, "import static utils.Utilities.formatNumber");
 
         } else if (dataType.get().equalsIgnoreCase("Image")) {
             addIfNotExists(list, "import javafx.scene.image.ImageView");
-            addIfNotExists(list, "import helpers.FXUIUtils");
+            addIfNotExists(list, "import utils.FXUIUtils");
 
         }
 
@@ -1020,11 +1004,11 @@ public class Field {
                 addIfNotExists(list, "import javafx.scene.control.TableColumn");
                 addIfNotExists(list, "import javafx.scene.control.TablePosition");
                 addIfNotExists(list, "import javafx.collections.ObservableList");
-                addIfNotExists(list, "import helpers.EditCell");
+                addIfNotExists(list, "import utils.EditCell");
                 try {
                     this.getSubFieldList().forEach(d -> {
                         if ((d.getDataType().equalsIgnoreCase("float") || d.getDataType().equalsIgnoreCase("double"))) {
-                            addIfNotExists(list, "import static helpers.Utilities.defortNumberOptional");
+                            addIfNotExists(list, "import static utils.Utilities.defortNumberOptional");
                         }
                         if (d.isReferance()) {
                             addIfNotExists(list, "import entities." + d.getReferences());
@@ -1038,9 +1022,9 @@ public class Field {
         } else if (isReferance()) {
             if (enumerated.get()) {
                 if (isNullOrEmpty(getEnumClass())) {
-                    addIfNotExists(list, "import helpers.CommonEnums." + references.get());
+                    addIfNotExists(list, "import utils.CommonEnums." + references.get());
                 } else {
-                    addIfNotExists(list, "import helpers." + getEnumClass() + "." + references.get());
+                    addIfNotExists(list, "import utils." + getEnumClass() + "." + references.get());
                 }
                 addIfNotExists(list, "import javafx.collections.FXCollections");
 
@@ -1049,9 +1033,9 @@ public class Field {
                 addIfNotExists(list, "import dbaccess." + getReferencesDA());
                 if (references.get().equalsIgnoreCase("LookupData")) {
                     if (getEnumClass().equalsIgnoreCase("CommonEnums")) {
-                        addIfNotExists(list, "import helpers.CommonObjectNames");
+                        addIfNotExists(list, "import utils.CommonObjectNames");
                     } else {
-                        addIfNotExists(list, "import helpers.ObjectNames");
+                        addIfNotExists(list, "import utils.ObjectNames");
                     }
                 }
 
@@ -1061,14 +1045,14 @@ public class Field {
         } else if (dataType.get().equalsIgnoreCase("LocalDateTime")) {
             addIfNotExists(list, "import java.time.LocalDateTime");
         } else if (dataType.get().equalsIgnoreCase("float") || dataType.get().equalsIgnoreCase("double")) {
-            addIfNotExists(list, "import static helpers.Utilities.formatNumber");
+            addIfNotExists(list, "import static utils.Utilities.formatNumber");
         } else if (dataType.get().equalsIgnoreCase("Image")) {
             addIfNotExists(list, "import javafx.scene.control.Button");
         }
 
 //        ***********************************************************************************************
         if (getSaburiKey().equalsIgnoreCase(Saburikeys.ID_Generator.name())) {
-            addIfNotExists(list, "import static helpers.Utilities.isNullOrEmpty");
+            addIfNotExists(list, "import static utils.Utilities.isNullOrEmpty");
             if (isReferance()) {
                 addIfNotExists(list, "import dbaccess." + getReferencesDA());
             }

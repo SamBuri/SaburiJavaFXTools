@@ -50,9 +50,9 @@ public class Controller {
         String imp = "import java.net.URL;\n"
                 + "import java.util.ResourceBundle;\n"
                 + "import javafx.fxml.FXML;\n"
-                + "import static helpers.FXUIUtils.*;\n"
-                + "import helpers.Utilities.FormMode;\n"
-                + "import static helpers.FXUIUtils.warningOk;\n"
+                + "import static utils.FXUIUtils.*;\n"
+                + "import utils.Utilities.FormMode;\n"
+                + "import static utils.FXUIUtils.warningOk;\n"
                 + "import dbaccess." + objectNameDA + ";\n";
 
         List<String> imports = new ArrayList();

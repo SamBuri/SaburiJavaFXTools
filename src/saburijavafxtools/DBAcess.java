@@ -73,9 +73,8 @@ public class DBAcess extends CodeGenerator {
                 + "import java.util.ArrayList;\n"
                 + "import entities.AppRevisionEntity;\n"
                 + "import java.util.List;\n"
-                + "import javafx.util.Pair;\n"
-                + "import helpers.SearchColumn;\n"
-                + "import helpers.SearchColumn.SearchDataTypes;\n"
+                + "import utils.SearchColumn;\n"
+                + "import utils.SearchColumn.SearchDataTypes;\n"
                 + "import org.hibernate.envers.RevisionType;\n";
         List<String> imports = new ArrayList();
         fields.forEach((t) -> {
