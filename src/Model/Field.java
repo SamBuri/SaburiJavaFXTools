@@ -1031,6 +1031,7 @@ public class Field {
             } else {
                 addIfNotExists(list, "import javafx.scene.control.MenuItem");
                 addIfNotExists(list, "import dbaccess." + getReferencesDA());
+                addIfNotExists(list, "import  entities." + getReferences());
                 if (references.get().equalsIgnoreCase("LookupData")) {
                     if (getEnumClass().equalsIgnoreCase("CommonEnums")) {
                         addIfNotExists(list, "import utils.CommonObjectNames");
@@ -1133,7 +1134,7 @@ public class Field {
             if (enumerated.get()) {
                 return references.get() + " " + this.variableName + " =  (" + references.get() + ")getSelectedValue(" + controlName + ", \"" + caption.get() + "\");\n";
             }
-            return getReferencesDA() + " " + this.variableName + "DA =  (" + getReferencesDA() + ") getDAValue(" + controlName + ", \"" + caption.get() + "\");\n";
+            return getReferences() + " " + this.variableName + " =("+ getReferences() + ") getEntity(" + controlName + ", \"" + caption.get() + "\");\n";
         }
 
         if (dataType.get().equalsIgnoreCase("Date") || dataType.get().equalsIgnoreCase("DateTime")

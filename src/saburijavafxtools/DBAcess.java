@@ -142,22 +142,22 @@ public class DBAcess extends CodeGenerator {
 
         for (int i = 0; i < constructorFields.size(); i++) {
             Field field = constructorFields.get(i);
-            if (field.isReferance() && !field.getEnumerated()) {
-                if (i == 0) {
-                    construtorLine += field.getReferencesDA() + " " + field.getVariableNameDA();
-                } else {
-                    construtorLine += ", " + field.getReferencesDA() + " " + field.getVariableNameDA();
-                }
-            } else {
+//            if (field.isReferance() && !field.getEnumerated()) {
+//                if (i == 0) {
+//                    construtorLine += field.getReferencesDA() + " " + field.getVariableNameDA();
+//                } else {
+//                    construtorLine += ", " + field.getReferencesDA() + " " + field.getVariableNameDA();
+//                }
+//            } else {
 
                 if (i == 0) {
-                    construtorLine += field.getDeclaration(false, false);
+                    construtorLine += field.getDeclaration(true, false);
 
                 } else {
-                    construtorLine += ", " + field.getDeclaration(false, false);
+                    construtorLine += ", " + field.getDeclaration(true, false);
                 }
 
-            }
+//            }
 
         }
 
@@ -167,15 +167,15 @@ public class DBAcess extends CodeGenerator {
             if (field.isCollection()) {
 //                construtorLine += field.getDeclaration(false, false);
 //                makeInitials += field.getVariableName();
-            } else if (field.isReferance() && !field.getEnumerated()) {
-                if (i == 0) {
-                    makeInitials += field.getVariableNameDA() + "!= null ? (" + field.getReferences() + ") " + field.getVariableNameDA() + ".getDBEntity() : null";
-                } else {
-
-//                makeInitials += "(" + field.getReferences() + ")" + Utilities.getVariableName(field.getFieldName() + "DA ") + ".getDBEntity()";
-                    makeInitials += ", " + field.getVariableNameDA() + "!= null ? (" + field.getReferences() + ") " + field.getVariableNameDA() + ".getDBEntity() : null";
-                }
-            } else {
+//            } else if (field.isReferance() && !field.getEnumerated()) {
+//                if (i == 0) {
+//                    makeInitials += field.getVariableNameDA() + "!= null ? (" + field.getReferences() + ") " + field.getVariableNameDA() + ".getDBEntity() : null";
+//                } else {
+//
+////                makeInitials += "(" + field.getReferences() + ")" + Utilities.getVariableName(field.getFieldName() + "DA ") + ".getDBEntity()";
+//                    makeInitials += ", " + field.getVariableNameDA() + "!= null ? (" + field.getReferences() + ") " + field.getVariableNameDA() + ".getDBEntity() : null";
+//                }
+//            } else {
                 if (field.isHelper()) {
                     try {
                         if (i == 0) {

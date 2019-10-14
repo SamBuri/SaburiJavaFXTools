@@ -88,6 +88,7 @@ public class Controller {
                     properties += field.annotedImageButtons();
                     if (field.isReferance() && !field.getEnumerated()) {
                         properties += "@FXML private MenuItem cmiSelect" + field.getFieldName() + ";\n";
+                        properties+="private final "+field.getReferencesDA()+" o"+field.getReferencesDA()+" = new "+field.getReferencesDA()+"();";
                     }
                 }
             }
@@ -161,15 +162,15 @@ public class Controller {
 
                     if (field.getReferences().equalsIgnoreCase("LookupData")) {
                         if (field.getEnumClass().equalsIgnoreCase("CommonEnums")) {
-                            lookupDataLoadings += " loadLookupDataCombo(" + field.getControlName() + ", CommonObjectNames." + field.getFieldName().toUpperCase() + ");\n";
+                            lookupDataLoadings += " loadLookupData(" + field.getControlName() + ", CommonObjectNames." + field.getFieldName().toUpperCase() + ");\n";
                             menuLoadCalls += "selectLookupData(cmiSelect" + field.getFieldName() + ", CommonObjectNames." + field.getFieldName().toUpperCase() + ", \"view\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", false);";
                         } else {
-                            lookupDataLoadings += " loadLookupDataCombo(" + field.getControlName() + ", ObjectNames." + field.getFieldName().toUpperCase() + ");\n";
+                            lookupDataLoadings += " loadLookupData(" + field.getControlName() + ", ObjectNames." + field.getFieldName().toUpperCase() + ");\n";
                             menuLoadCalls += "selectLookupData(cmiSelect" + field.getFieldName() + ", ObjectNames." + field.getFieldName().toUpperCase() + ", \"view\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", false);";
                         }
                     } else {
-                        comboLoadings += "loadDaCombo(new " + field.getReferences() + "DA().get(), " + field.getControlName() + ");\n";
-                        menuLoadCalls += "selectItem(cmiSelect" + field.getFieldName() + ", new " + field.getReferences() + "DA(), \"View\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", true);";
+                        comboLoadings += "loadDBEntities(o" + field.getReferencesDA()+ ".get" + field.getReferences()+ "s(), " + field.getControlName() + ");\n";
+                        menuLoadCalls += "selectItem(cmiSelect" + field.getFieldName() + ", o" + field.getReferencesDA()+ ", \"View\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", true);";
 
                     }
 
@@ -218,9 +219,7 @@ public class Controller {
             Field field = conField.get(i);
 
             makeInitials += field.getVariableName();
-            if (field.isReferance() && !field.getEnumerated()) {
-                makeInitials += "DA";
-            }
+            
             if (i < conField.size() - 1) {
                 makeInitials += ",";
             }
