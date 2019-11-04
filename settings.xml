@@ -5,7 +5,7 @@
    <int>12</int>
   </void>
   <void property="miniLineBreak">
-   <int>2</int>
+   <int>5</int>
   </void>
  </object>
 </java>

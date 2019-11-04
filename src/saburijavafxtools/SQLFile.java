@@ -15,8 +15,8 @@ public class SQLFile {
       return "call uspEditIDGenerator('" + objectName + "', '0', 2, '', 0, '');\n";
     }
     
-    public static String callEditAccessObject(String objectName){
-     return "call uspEditAccessObject ('"+objectName+"', '"+objectName+"', '0');\n";
+    public static String callEditAccessObject(String objectName, String objectCaption){
+     return "call uspEditAccessObject ('"+objectName+"', '"+objectCaption+"', '0');\n";
     }
     
 }

@@ -21,7 +21,7 @@ import javafx.collections.transformation.FilteredList;
  * @author CLINICMASTER13
  */
 public class Controller {
-
+    
     private final String objectName;
     private final List<Field> fields;
     private final String objectNameDA;
@@ -31,7 +31,7 @@ public class Controller {
     private final String daVariableName;
     private final Field primaryKey;
     FilteredList<Field> subListFields;
-
+    
     public Controller(String objectName, List<Field> fields) {
         this.objectName = objectName;
         this.fields = fields;
@@ -44,9 +44,9 @@ public class Controller {
         subListFields = new FilteredList<>(FXCollections.observableList(fields), e -> true);
         subListFields.setPredicate(FieldPredicates.hasSubFields());
     }
-
+    
     private String imports() {
-
+        
         String imp = "import java.net.URL;\n"
                 + "import java.util.ResourceBundle;\n"
                 + "import javafx.fxml.FXML;\n"
@@ -54,7 +54,7 @@ public class Controller {
                 + "import utils.Utilities.FormMode;\n"
                 + "import static utils.FXUIUtils.warningOk;\n"
                 + "import dbaccess." + objectNameDA + ";\n";
-
+        
         List<String> imports = new ArrayList();
         this.fields.forEach((t) -> {
             try {
@@ -62,20 +62,20 @@ public class Controller {
             } catch (Exception ex) {
                 Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            
         });
         for (String impo : imports) {
             imp += impo + ";\n";
         }
         return imp;
-
+        
     }
-
+    
     private String annotedControllers() throws Exception {
-
+        
         String properties = "";
         properties += " private final " + objectNameDA + " " + daGlobalVariable + " = new " + objectNameDA + "();\n";
-
+        List<String> globalRefObjects = new ArrayList<>();
         for (Field field : fields) {
             if (!field.isHelper()) {
                 if (field.isCollection()) {
@@ -88,18 +88,21 @@ public class Controller {
                     properties += field.annotedImageButtons();
                     if (field.isReferance() && !field.getEnumerated()) {
                         properties += "@FXML private MenuItem cmiSelect" + field.getFieldName() + ";\n";
-                        properties+="private final "+field.getReferencesDA()+" o"+field.getReferencesDA()+" = new "+field.getReferencesDA()+"();";
+                        if (!field.getReferences().equalsIgnoreCase("LookupData")) {
+                            addIfNotExists(globalRefObjects, field.getReferencesDA());
+                        }
                     }
                 }
             }
         }
-
+        properties = globalRefObjects.stream().map((string) -> "private final " + string + " o" + string + " = new " + string + "();").reduce(properties, String::concat);
+        
         String tableColumns = "";
         for (Field field : subListFields) {
-
+            
             String custom = field.getReferences();
             List<Field> subFields = field.getSubFieldList();
-
+            
             for (Field subField : subFields) {
                 if (subField.isReferance()) {
                     tableColumns += subField.getReferencesDA() + " o" + subField.getReferencesDA() + " = new " + subField.getReferencesDA() + "();\n";
@@ -110,13 +113,13 @@ public class Controller {
                 } else {
                     tableColumns += "@FXML private TableColumn<" + custom + "DA, " + subField.getDataTypeWrapper() + "> " + subField.getColumnName(custom) + ";\n";
                 }
-
+                
             }
-
+            
         }
         return properties + tableColumns;
     }
-
+    
     public String setControlIDInInitialiser() {
         Field idGeneratorObject = Utilities.getIDGenerator(fields);
         Field IDHelperObject = Utilities.getIDHelper(fields);
@@ -126,7 +129,7 @@ public class Controller {
         if (idGeneratorObject == null) {
             return "this.setNext" + primaryKey.getFieldName() + "();\n";
         } else {
-
+            
             if (idGeneratorObject.isReferance()) {
                 return "cbo" + idGeneratorObject.getFieldName() + ".setOnAction(e -> this.setNext" + primaryKey.getFieldName() + "());";
             } else {
@@ -136,15 +139,15 @@ public class Controller {
                         + "                }\n"
                         + "            });\n";
             }
-
+            
         }
     }
-
+   
     private String initMethod() throws Exception {
         String initProperties = "this.primaryKeyControl = " + primaryKey.getControlName() + ";\n"
                 + "          this.dbAccess = " + daGlobalVariable + ";\n"
                 + "          this.restrainColumnConstraint = false;\n"
-                + "this.minSize = 360;\n";
+                + " //this.minSize = 360;\n";
         String lookupDataLoadings = "";
         String comboLoadings = "";
         String numberValidator = "";
@@ -153,13 +156,13 @@ public class Controller {
         String editableTable = "";
         String menuLoadCalls = "";
         for (Field field : fields) {
-
+            
             if (field.isReferance() && !field.isCollection()) {
-
+                
                 if (field.getEnumerated()) {
                     comboLoadings += field.getControlName() + ".setItems(FXCollections.observableArrayList(" + field.getReferences() + ".values()));";
                 } else {
-
+                    
                     if (field.getReferences().equalsIgnoreCase("LookupData")) {
                         if (field.getEnumClass().equalsIgnoreCase("CommonEnums")) {
                             lookupDataLoadings += " loadLookupData(" + field.getControlName() + ", CommonObjectNames." + field.getFieldName().toUpperCase() + ");\n";
@@ -169,86 +172,86 @@ public class Controller {
                             menuLoadCalls += "selectLookupData(cmiSelect" + field.getFieldName() + ", ObjectNames." + field.getFieldName().toUpperCase() + ", \"view\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", false);";
                         }
                     } else {
-                        comboLoadings += "loadDBEntities(o" + field.getReferencesDA()+ ".get" + field.getReferences()+ "s(), " + field.getControlName() + ");\n";
-                        menuLoadCalls += "selectItem(cmiSelect" + field.getFieldName() + ", o" + field.getReferencesDA()+ ", \"View\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", true);";
-
+                        comboLoadings += "loadDBEntities(o" + field.getReferencesDA() + ".get" + field.getReferences() + "s(), " + field.getControlName() + ");\n";
+                        menuLoadCalls += "selectItem(cmiSelect" + field.getFieldName() + ", o" + field.getReferencesDA() + ", \"View\", \"" + field.getFieldName() + "\", 700, 400, " + field.getControlName() + ", true);";
+                        
                     }
-
+                    
                 }
-
+                
             } else {
                 if (field.makeEditableTable()) {
                     editableTable += field.getControlName() + ".setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);";
                     editableTable += "setTableEditable(" + field.getControlName() + ");";
                     editableTable += "addRow(" + field.getControlName() + ", new " + field.getReferencesDA() + "());";
                     editableTable += "cmiSelect" + field.getFieldName() + ".setOnAction(e->load" + field.getFieldName() + "());";
-
+                    
                 }
-
+                
             }
             imageButtonActions += field.ImageButtonsActions();
             numberValidator += field.NumberValidator();
             numberFormator += field.NumberFormatter();
         }
-
+        
         String methodBody = lookupDataLoadings + comboLoadings + "\n"
                 + numberValidator + numberFormator + editableTable;
-
+        
         String editColumnMethodCall = "";
         for (Field field : subListFields) {
             List<Field> subFields = field.getSubFieldList();
-
+            
             for (Field subField : subFields) {
                 editColumnMethodCall += "set" + field.getReferences() + subField.getFieldName() + "();\n";
             }
         }
-
+        
         methodBody += initProperties + imageButtonActions + setControlIDInInitialiser() + editColumnMethodCall + menuLoadCalls;
         return " @Override\n" + Utilities.makeTryMethod("public", "void", "initialize", "URL url, ResourceBundle rb", methodBody);
     }
-
+    
     private String save() {
         String makeInitials = "";
         String saveVariables = "";
-
+        
         List<Field> conField = fields.stream()
                 .filter((p) -> !p.isCollection())
                 .filter((p) -> !p.isHelper())
                 .collect(Collectors.toList());
         for (int i = 0; i < conField.size(); i++) {
             Field field = conField.get(i);
-
+            
             makeInitials += field.getVariableName();
             
             if (i < conField.size() - 1) {
                 makeInitials += ",";
             }
         }
-
+        
         for (int i = 0; i < fields.size(); i++) {
             Field field = this.fields.get(i);
             if (!field.isHelper()) {
-
+                
                 saveVariables += field.initialseSavableVariable();
-
+                
             }
-
+            
         }
         String body = saveVariables.concat("\n");
         body += objectNameDA + " " + daVariableName + "= new " + objectNameDA + "(" + makeInitials + ");\n";
-
+        
         if (!subListFields.isEmpty()) {
             for (Field field : fields) {
                 if (field.isCollection()) {
                     body += field.getVariableName() + "DAs.forEach(e->{\n"
-                            + "                e.set" + objectName + "((" + objectName + ") " + daVariableName + ".getDBEntity());\n"
+                            + "                e.set" + objectName + "((" + objectName + ") " + daVariableName + ".get"+field.getFieldName()+"());\n"
                             + "            });\n"
                             + "            " + daVariableName + ".set" + field.getFieldName() + "DAs(" + field.getVariableName() + "DAs);";
                 }
-
+                
             }
         }
-
+        
         body += "String buttonText =btnSave.getText();\n"
                 + "if (buttonText.equalsIgnoreCase(FormMode.Save.name())) {\n"
                 + "                " + daVariableName + ".save();\n"
@@ -258,19 +261,19 @@ public class Controller {
                 + "                " + daVariableName + ".update();\n"
                 + "                message(\"Updated Successfully\");\n"
                 + "            }\n";
-
+        
         return Utilities.makeTryMethod("@Override\nprotected", "void", "save", "", body);
     }
-
+    
     private String loadData() {
         String updateBody = "";
         for (Field field : fields) {
             if (field.isCollection()) {
                 updateBody += field.getControlName() + ".setItems(FXCollections.observableArrayList(" + daVariableName + ".get" + field.getFieldName() + "DAs()));";
                 updateBody += "addRow(" + field.getControlName() + ", new " + field.getReferencesDA() + "());\n";
-
+                
             } else if (field.isReferance() && !field.getEnumerated()) {
-                updateBody += field.setControlText(daVariableName.concat(".get" + field.getFieldName() + "DA()"));
+                updateBody += field.setControlText(daVariableName.concat(".get" + field.getFieldName() + "()"));
             } else {
                 updateBody += field.setControlText(daVariableName.concat(".").concat(field.getCall()));
             }
@@ -286,11 +289,11 @@ public class Controller {
                 + "\n"
                 + "    }\n"
                 + "";
-
+        
         return updateMethod;
-
+        
     }
-
+    
     private String clear() {
         String clear = "";
         for (Field field : fields) {
@@ -299,9 +302,9 @@ public class Controller {
         clear += setControlIDInInitialiser();
         return Utilities.makeMethod("private", "void", "clear", "", clear);
     }
-
+    
     private String getSetIDControl() throws Exception {
-
+        
         String body;
         Field idHelperObject = Utilities.getIDHelper(fields);
         Field idGeneratorObject = Utilities.getIDGenerator(fields);
@@ -315,11 +318,11 @@ public class Controller {
             body = primaryKey.getControlName() + ".setText(" + daGlobalVariable + ".getNext" + primaryKey.getFieldName() + ""
                     + "(" + daGlobalVariable + ".getNext" + idHelperObject.getFieldName() + "()));\n";
         } else {
-
+            
             String idGeneratorVariableName = idGeneratorObject.getVariableName();
             String references = idGeneratorObject.getReferences();
             if (idGeneratorObject.isReferance()) {
-
+                
                 if (idGeneratorObject.getEnumerated()) {
                     body = references + " " + idGeneratorVariableName + " = (" + references + ") "
                             + "cbo" + idGeneratorObject.getFieldName() + ".getValue();\n"
@@ -328,7 +331,7 @@ public class Controller {
                             + "        }\n"
                             + primaryKey.getControlName() + ".setText(" + daGlobalVariable + ".getNext" + primaryKey.getFieldName() + ""
                             + "(" + daGlobalVariable + ".getNext" + idHelperObject.getFieldName() + "(" + idGeneratorVariableName + "), " + idGeneratorVariableName + "));\n";
-
+                    
                 } else {
                     body = "String " + idGeneratorVariableName + " = "
                             + "getTextValue(cbo" + idGeneratorObject.getFieldName() + ");\n"
@@ -339,7 +342,7 @@ public class Controller {
                             + primaryKey.getControlName() + ".setText(" + daGlobalVariable + ".getNext" + primaryKey.getFieldName() + ""
                             + "(" + daGlobalVariable + ".getNext" + idHelperObject.getFieldName() + "(" + idGeneratorVariableName + "DA), " + idGeneratorVariableName + "));\n";
                 }
-
+                
             } else {
                 body = "String " + idGeneratorVariableName + " = "
                         + idGeneratorObject.getControlName() + ".getText();\n"
@@ -348,11 +351,11 @@ public class Controller {
                         + "        }\n"
                         + primaryKey.getControlName() + ".setText(" + daGlobalVariable + ".getNext" + primaryKey.getFieldName() + ""
                         + "(" + daGlobalVariable + ".getNext" + idHelperObject.getFieldName() + "(" + idGeneratorVariableName + "), " + idGeneratorVariableName + "));\n";
-
+                
             }
-
+            
         }
-
+        
         String genCondition = "if(btnSave.getText ().equalsIgnoreCase(FormMode.Save.name())){\n";
         String bBody = genCondition + body.concat("}");
         String tryBody = "";
@@ -360,15 +363,15 @@ public class Controller {
         if (!bBody.equals("")) {
             tryBody = "try{" + bBody + "}catch(Exception e){errorMessage(e);}";
             bBody = tryBody;
-
+            
         }
-
+        
         return Utilities.makeMethod("private", "void", methodName, "", bBody);
-
+        
     }
-
+    
     private String methods() throws Exception {
-
+        
         String cDelete = "@Override\nprotected void delete(){\n"
                 + "        try {\n"
                 + Utilities.getPrimaryKey(fields).initialseSavableVariable()
@@ -382,26 +385,26 @@ public class Controller {
                 + "            errorMessage(e);\n"
                 + "        }\n"
                 + "        }\n";
-
+        
         String editColumn = "";
         for (Field field : subListFields) {
             List<Field> subFields = field.getSubFieldList();
-
+            
             for (Field subField : subFields) {
                 editColumn += subField.editTableColumnMethod(field);
             }
         }
-
+        
         String loadMethods = "";
         loadMethods = subListFields.stream().map((field) -> field.makeLoadCollections()).reduce(loadMethods, String::concat);
         return initMethod() + save() + cDelete + loadData() + getSetIDControl() + editColumn + loadMethods + clear();
-
+        
     }
-
+    
     public String makeClass() throws Exception {
         JavaClass javaClass = new JavaClass("controllers", objectNameController, this.imports(),
                 this.annotedControllers(), "", "", methods());
         return javaClass.makeClass("EditController");
     }
-
+    
 }

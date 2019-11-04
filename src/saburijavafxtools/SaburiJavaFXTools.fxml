@@ -26,15 +26,21 @@
             <TextField fx:id="txtFileName" minWidth="500" promptText="File Name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Button fx:id="btnBrowse" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="0" />
             <Button fx:id="btnImport" text="Import" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-            <Button fx:id="btnSave" visible="false" text="Save" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+            <Button fx:id="btnSave" text="Save" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="0" />
             <Label fx:id="lblObjectName" text="Object Name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="txtObjectName" promptText="Object Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        
+            
+            <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <TextField fx:id="txtObjectName" prefHeight="26.0" prefWidth="198.0" promptText="Object Name" />
+                <Label fx:id="lblObjectCaption" text="Object Caption" />
+                <TextField fx:id="txtObjectCaption" prefHeight="26.0" prefWidth="213.0" />
+            </HBox>
             <Label fx:id="lblOutputDirectory" text="Output Location" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <TextField fx:id="txtOutputDirectory" minWidth="300" promptText="Output Location" text="C:\Saburi Tools" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Button fx:id="btnOutputDirectory" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+         
            
             <columnConstraints>
+                <ColumnConstraints />
                 <ColumnConstraints />
                 <ColumnConstraints />
                 <ColumnConstraints />
@@ -65,12 +71,12 @@
                 <Insets left="10.0" />
             </padding>
             <columns>
-                <TableColumn id="Tools" fx:id="tbcFieldName" minWidth="120" text="Field Name" editable="true">
+                <TableColumn id="Tools" fx:id="tbcFieldName" editable="true" minWidth="120" text="Field Name">
                     <cellValueFactory>
                         <PropertyValueFactory property="fieldName" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="tbcCaption" minWidth="120" text="Caption" editable="true">
+                <TableColumn fx:id="tbcCaption" editable="true" minWidth="120" text="Caption">
                     <cellValueFactory>
                         <PropertyValueFactory property="caption" />
                     </cellValueFactory>
@@ -78,37 +84,37 @@
                     </FormattedTableCellFactory>
                     </cellFactory> -->
                 </TableColumn>
-                <TableColumn fx:id="tbcDataType" minWidth="50" text="Data Type" editable="true">
+                <TableColumn fx:id="tbcDataType" editable="true" minWidth="50" text="Data Type">
                     <cellValueFactory>
                         <PropertyValueFactory property="dataType" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="tbcReferences" minWidth="120" text="References" editable="true">
+                <TableColumn fx:id="tbcReferences" editable="true" minWidth="120" text="References">
                     <cellValueFactory>
                         <PropertyValueFactory property="references" />
                     </cellValueFactory>
                 </TableColumn>
                 
-                <TableColumn fx:id="tbcSubFields" minWidth="50" text="Sub Fields" editable="true" >
+                <TableColumn fx:id="tbcSubFields" editable="true" minWidth="50" text="Sub Fields">
                     <cellValueFactory>
                         <PropertyValueFactory property="subFields" />
                     </cellValueFactory>
                 </TableColumn>
              
-                <TableColumn fx:id="tbcKey" minWidth="50" text="Key" editable="true">
+                <TableColumn fx:id="tbcKey" editable="true" minWidth="50" text="Key">
                     <cellValueFactory>
                         <PropertyValueFactory property="key" />
                     </cellValueFactory>
                 </TableColumn>
              
-                <TableColumn fx:id="tbcSaburiKey" minWidth="50" text="Saburi Key" editable="true">
+                <TableColumn fx:id="tbcSaburiKey" editable="true" minWidth="50" text="Saburi Key">
                     <cellValueFactory>
                         <PropertyValueFactory property="saburiKey" />
                     </cellValueFactory>
                 </TableColumn>
                 
                 
-              <TableColumn fx:id="tbcMapping" minWidth="50" text="Mapping" editable="true">
+                <TableColumn fx:id="tbcMapping" editable="true" minWidth="50" text="Mapping">
                     <cellValueFactory>
                         <PropertyValueFactory property="mapping" />
                     </cellValueFactory>
@@ -120,19 +126,19 @@
                     </cellValueFactory>
                 </TableColumn>
                 
-                <TableColumn fx:id="tbcEnumerated" minWidth="40" text="Enumerated" editable="true">
+                <TableColumn fx:id="tbcEnumerated" editable="true" minWidth="40" text="Enumerated">
                     <cellValueFactory>
                         <PropertyValueFactory property="enumerated" />
                     </cellValueFactory>
                 </TableColumn>
              
-                <TableColumn fx:id="tbcNullable" minWidth="20" text="Nullable" editable="true">
+                <TableColumn fx:id="tbcNullable" editable="true" minWidth="20" text="Nullable">
                     <cellValueFactory>
                         <PropertyValueFactory property="nullable" />
                     </cellValueFactory>
                 </TableColumn>
                 
-                <TableColumn fx:id="tbcEnumClass" minWidth="20" text="enumClass" editable="true">
+                <TableColumn fx:id="tbcEnumClass" editable="true" minWidth="20" text="enumClass">
                     <cellValueFactory>
                         <PropertyValueFactory property="enumClass" />
                     </cellValueFactory>

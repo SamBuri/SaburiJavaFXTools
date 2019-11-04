@@ -14,7 +14,7 @@ import static helpers.Utilities.isNullOrEmpty;
  */
 public class Menu {
 
-    public static String makeMenu(String objectName, Enums.MenuTypes menuType, String parentMenu) {
+    public static String makeMenu(String objectName, String objectCaption, Enums.MenuTypes menuType, String parentMenu) {
         String parentMenuHolder;
         String fxmlMenu;
         String menu = "";
@@ -40,7 +40,7 @@ public class Menu {
             updateMenu = parentMenuHolder + "Update";
             viewMenu = parentMenuHolder + "View";
             fxmlMenu = "<items>\n"
-                    + "<Menu fx:id=\"" + parentMenuHolder + "\" mnemonicParsing=\"false\" text=\"" + objectName + "\" id = \"" + objectName + "\">\n"
+                    + "<Menu fx:id=\"" + parentMenuHolder + "\" mnemonicParsing=\"false\" text=\"" + objectCaption + "\" id = \"" + objectName + "\">\n"
                     + "<MenuItem fx:id=\"" + addMenu + "\" id = \"Create\" mnemonicParsing=\"false\" text=\"Add\" />\n"
                     + "<MenuItem fx:id=\"" + updateMenu + "\" id = \"Update\" mnemonicParsing=\"false\" text=\"Update\" />\n"
                     + "<MenuItem fx:id=\"" + viewMenu + "\" id = \"Read\" mnemonicParsing=\"false\" text=\"View\" />\n"
@@ -53,7 +53,7 @@ public class Menu {
             updateMenu = parentMenuHolder + "Update";
             viewMenu = parentMenuHolder + "View";
 
-            fxmlMenu = "<SplitMenuButton fx:id=\"" + parentMenuHolder + "\" id =\"" + objectName + "\"  mnemonicParsing=\"false\" text=\"" + objectName + "\">\n"
+            fxmlMenu = "<SplitMenuButton fx:id=\"" + parentMenuHolder + "\" id =\"" + objectName + "\"  mnemonicParsing=\"false\" text=\"" + objectCaption + "\">\n"
                     + "<items>\n"
                     + "<MenuItem fx:id=\"" + addMenu + "\" id =\"Create\" mnemonicParsing=\"false\" text=\"Save\" />\n"
                     + "<MenuItem fx:id=\"" + updateMenu + "\" id =\"Update\" mnemonicParsing=\"false\" text=\"Update\" />\n"
@@ -61,8 +61,8 @@ public class Menu {
                     + "</items>\n"
                     + "</SplitMenuButton>";
         }
-        String searchMenu = "new SearchItem(new " + objectName + "DA(), \"" + objectName + "\", \"" + objectName + "\", false),\n" +
-"            new SearchItem(new " + objectName + "DA(), Revision, \"" + objectName + "\", \"" + objectName + "\", false)";
+        String searchMenu = "new SearchItem(new " + objectName + "DA(), \"" + objectName + "\", \"" + objectCaption + "\", false),\n" +
+"            new SearchItem(new " + objectName + "DA(), Revision, \"" + objectName + "\", \"" + objectCaption + "\", false)";
 
         String menuFields = "@FXML private " + menuName + " " + addMenu + ", " + updateMenu + ", " + viewMenu + ";\n";
 
@@ -71,9 +71,9 @@ public class Menu {
         menu+=searchMenu;
         menu += "\n\n****************************add SceneController.java*************************************************************\n";
         menu += menuFields;
-        menu += "editMenuItemClick(" + addMenu + ", \"" + objectName + "\", \"" + objectName + "\", FormMode.Save);\n";
-        menu += "editMenuItemClick(" + updateMenu + ", \"" + objectName + "\", \"" + objectName + "\", FormMode.Update);\n";
-        menu += "viewMenuItemClick(" + viewMenu + ", new " + objectName + "DA(), \"" + objectName + "\", \"" + objectName + "\",false, true);\n";
+        menu += "editMenuItemClick(" + addMenu + ", \"" + objectName + "\", \"" + objectCaption + "\", FormMode.Save);\n";
+        menu += "editMenuItemClick(" + updateMenu + ", \"" + objectName + "\", \"" + objectCaption + "\", FormMode.Update);\n";
+        menu += "viewMenuItemClick(" + viewMenu + ", new " + objectName + "DA(), \"" + objectName + "\", \"" + objectCaption + "\",false, true);\n";
         return menu;
     }
 

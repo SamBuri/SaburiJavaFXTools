@@ -602,7 +602,9 @@ public class Field {
 
         } else if (isReferance() && !(this.getEnumerated() || isCollection())) {
             return Utilities.makeMethod("public", "void", "set" + this.getFieldName(), getDeclaration(true, false),
-                    setCall(objectName) + "this." + this.variableName.concat(" = ").concat(this.variableName).concat(";"));
+                    setCall(objectName) + "this." + this.variableName.concat(" = ").concat(this.variableName).concat(";") + ""
+                    + "this." + variableName + "ID.set(" + variableName + ".getId());\n"
+                    + "        this." + variableName + "Display.set(" + variableName + ".getDisplayKey());");
 
         } else if (type.equalsIgnoreCase("Image")) {
             return Utilities.makeMethod("public", "void", "set" + this.getFieldName(), getDeclaration(true, false),
@@ -629,7 +631,7 @@ public class Field {
     }
 
     public String referencesDAGetter() {
-        return Utilities.makeMethod("public", getReferencesDA(), "get"+getFieldName()+"DA", "", "return this."+variableName+"!=null? new "+getReferencesDA()+"(this."+variableName+"):null;");
+        return Utilities.makeMethod("public", getReferencesDA(), "get" + getFieldName() + "DA", "", "return this." + variableName + "!=null? new " + getReferencesDA() + "(this." + variableName + "):null;");
     }
 
     public String fiedAnnotations(String objectName, String primaryKey) {
@@ -1010,7 +1012,7 @@ public class Field {
                         if ((d.getDataType().equalsIgnoreCase("float") || d.getDataType().equalsIgnoreCase("double"))) {
                             addIfNotExists(list, "import static utils.Utilities.defortNumberOptional");
                         }
-                        if (d.isReferance()) {
+                        if (d.isReferance() && !getEnumerated()) {
                             addIfNotExists(list, "import entities." + d.getReferences());
                             addIfNotExists(list, "import javafx.application.Platform");
                         }
@@ -1054,7 +1056,7 @@ public class Field {
 //        ***********************************************************************************************
         if (getSaburiKey().equalsIgnoreCase(Saburikeys.ID_Generator.name())) {
             addIfNotExists(list, "import static utils.Utilities.isNullOrEmpty");
-            if (isReferance()) {
+            if (isReferance() && !getEnumerated()) {
                 addIfNotExists(list, "import dbaccess." + getReferencesDA());
             }
         }
@@ -1065,21 +1067,35 @@ public class Field {
         String type = this.getDataType();
         String body = "";
         if (this.isReferance()) {
-            body += getColumnName(field.getReferences()) + ".setCellFactory(EditCell." + getDataTypeWrapper() + "TableColumn());";
-            body += getColumnName(field.getReferences()) + ".setOnEditCommit(event -> {\n"
-                    + "            final " + getDataType() + " value = event.getNewValue() != null ? event.getNewValue()\n"
-                    + "                    : event.getOldValue();\n"
-                    + getReferences() + " " + variableName + " = o" + getReferencesDA() + ".get" + getReferences() + "(value);\n"
-                    + "            if (" + variableName + " == null) {\n"
-                    + "                Platform.runLater(()->message(\"No " + getReferences() + " with Id \"+value+\" found\"));\n"
-                    + "                return;\n"
-                    + "            }"
-                    + "            ((" + field.getReferencesDA() + ") event.getTableView().getItems()\n"
-                    + "                    .get(event.getTablePosition().getRow()))\n"
-                    + "                    .set" + getFieldName() + "(" + variableName + ");\n"
-                    + "            " + field.getControlName() + ".refresh();\n"
-                    + "            addRow(" + field.getControlName() + ",new " + field.getReferencesDA() + "());\n"
-                    + "        });";
+            if (this.getEnumerated()) {
+                body += getColumnName(field.getReferences()) + ".setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("+getReferences()+".values())));\n"
+                        + "        "+getColumnName(field.getReferences())+".setOnEditCommit(event -> {\n"
+                        + "            final Object value = event.getNewValue() != null ? event.getNewValue()\n"
+                        + "                    : event.getOldValue();\n"
+                        + "            \n"
+                        + "            ((" + field.getReferencesDA() + ") event.getTableView().getItems()\n"
+                        + "                    .get(event.getTablePosition().getRow()))\n"
+                        + "                    .set" + getFieldName() + "((" + getReferences() + ")value);\n"
+                        + "            " + field.getControlName() + ".refresh();\n"
+                        + "            addRow(" + field.getControlName() + ",new " + field.getReferencesDA() + "());\n"
+                        + "        });";
+            } else {
+                body += getColumnName(field.getReferences()) + ".setCellFactory(EditCell." + getDataTypeWrapper() + "TableColumn());";
+                body += getColumnName(field.getReferences()) + ".setOnEditCommit(event -> {\n"
+                        + "            final " + getDataType() + " value = event.getNewValue() != null ? event.getNewValue()\n"
+                        + "                    : event.getOldValue();\n"
+                        + getReferences() + " " + variableName + " = o" + getReferencesDA() + ".get" + getReferences() + "(value);\n"
+                        + "            if (" + variableName + " == null) {\n"
+                        + "                Platform.runLater(()->message(\"No " + getReferences() + " with Id \"+value+\" found\"));\n"
+                        + "                return;\n"
+                        + "            }"
+                        + "            ((" + field.getReferencesDA() + ") event.getTableView().getItems()\n"
+                        + "                    .get(event.getTablePosition().getRow()))\n"
+                        + "                    .set" + getFieldName() + "(" + variableName + ");\n"
+                        + "            " + field.getControlName() + ".refresh();\n"
+                        + "            addRow(" + field.getControlName() + ",new " + field.getReferencesDA() + "());\n"
+                        + "        });";
+            }
         } else if (type.equalsIgnoreCase("float") || type.equalsIgnoreCase("double")) {
             body += getColumnName(field.getReferences()) + ".setCellFactory(EditCell.StringTableColumn());";
             body += getColumnName(field.getReferences()) + ".setOnEditCommit(event -> {\n"
@@ -1127,14 +1143,14 @@ public class Field {
         if (isCollection()) {
 
             return "List<" + getReferencesDA() + "> " + variableName + "DAs = " + controlName + ".getItems();\n"
-                    + variableName + "DAs.removeIf((p) -> p.getDBEntity() == null);\n";
+                    + variableName + "DAs.removeIf((p) -> p.get"+getFieldName()+"() == null);\n";
 
         }
         if (isReferance()) {
             if (enumerated.get()) {
                 return references.get() + " " + this.variableName + " =  (" + references.get() + ")getSelectedValue(" + controlName + ", \"" + caption.get() + "\");\n";
             }
-            return getReferences() + " " + this.variableName + " =("+ getReferences() + ") getEntity(" + controlName + ", \"" + caption.get() + "\");\n";
+            return getReferences() + " " + this.variableName + " =(" + getReferences() + ") getEntity(" + controlName + ", \"" + caption.get() + "\");\n";
         }
 
         if (dataType.get().equalsIgnoreCase("Date") || dataType.get().equalsIgnoreCase("DateTime")

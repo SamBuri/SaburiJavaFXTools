@@ -110,7 +110,7 @@ public class DBAcess extends CodeGenerator {
 
             String idGeneratorVariableName = idGeneratorObject.getVariableName();
             if (idGeneratorObject.isReferance()) {
-                idGeneratorVariableName = idGeneratorVariableName.concat("DA");
+                idGeneratorVariableName = idGeneratorVariableName;
             }
 
             return " getNext" + idHelperObject.getFieldName() + "(" + idGeneratorVariableName + ")";
@@ -175,7 +175,7 @@ public class DBAcess extends CodeGenerator {
 ////                makeInitials += "(" + field.getReferences() + ")" + Utilities.getVariableName(field.getFieldName() + "DA ") + ".getDBEntity()";
 //                    makeInitials += ", " + field.getVariableNameDA() + "!= null ? (" + field.getReferences() + ") " + field.getVariableNameDA() + ".getDBEntity() : null";
 //                }
-//            } else {
+            } else {
                 if (field.isHelper()) {
                     try {
                         if (i == 0) {
@@ -265,8 +265,8 @@ public class DBAcess extends CodeGenerator {
             String idGeneratorVariableName = idGeneratorObject.getVariableName();
             String idHelperVariableName = idHelperObject.getVariableName();
             if (idGeneratorObject.isReferance() && !idGeneratorObject.getEnumerated()) {
-                return "public final int getNext" + idHelperObject.getFieldName() + "(" + idGeneratorObject.getReferencesDA() + " " + idGeneratorVariableName + "DA) {\n"
-                        + "        return this.getMax(\"" + idHelperVariableName + "\",\"" + idGeneratorVariableName + "\", " + idGeneratorVariableName + "DA.getDBEntity())+1;\n"
+                return "public final int getNext" + idHelperObject.getFieldName() + "(" + idGeneratorObject.getReferences()+ " " + idGeneratorVariableName + ") {\n"
+                        + "        return this.getMax(\"" + idHelperVariableName + "\",\"" + idGeneratorVariableName + "\", " + idGeneratorVariableName + ")+1;\n"
                         + "    }\n";
             } else {
                 return "public final int getNext" + idHelperObject.getFieldName() + "(Object " + idGeneratorVariableName + ") {\n"

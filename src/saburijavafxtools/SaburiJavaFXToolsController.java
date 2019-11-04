@@ -63,10 +63,10 @@ public class SaburiJavaFXToolsController implements Initializable {
     }
 
     private final ObservableList dataTypes = FXCollections.observableArrayList(
-            "String", "List", "Set","Image", "LocalDate", "LocalDateTime", "LocalTime", "boolean", "int", "float", "double"
+            "String", "List", "Set", "Image", "LocalDate", "LocalDateTime", "LocalTime", "boolean", "int", "float", "double"
     );
-    
-     private final ObservableList enumClasses = FXCollections.observableArrayList("CommonEnums", "Enums");
+
+    private final ObservableList enumClasses = FXCollections.observableArrayList("CommonEnums", "Enums");
 
     private final ObservableList mapppings = FXCollections.observableArrayList(RelationMappping.OneToOne.name(),
             RelationMappping.OneToMany.name(), RelationMappping.ManyToOne.name(), RelationMappping.ManyToMany.name());
@@ -97,7 +97,7 @@ public class SaburiJavaFXToolsController implements Initializable {
     private TableColumn<Field, Boolean> tbcEnumerated;
 
     @FXML
-    private TextField txtFileName, txtObjectName, txtOutputDirectory, txtParentMenuID;
+    private TextField txtFileName, txtObjectName, txtObjectCaption, txtOutputDirectory, txtParentMenuID;
     @FXML
 
     private Button btnBrowse, btnOutputDirectory;
@@ -121,8 +121,10 @@ public class SaburiJavaFXToolsController implements Initializable {
         try {
             btnBrowse.setOnAction(e -> {
                 String fileName = (browse(txtFileName));
-                String tokens = fileName.substring(0, fileName.length() - 4);
-                txtObjectName.setText(fileName.substring(0, fileName.length() - 4));
+//                String tokens = fileName.substring(0, fileName.length() - 4);
+                String objectName = fileName.substring(0, fileName.length() - 4);
+                txtObjectName.setText(objectName);
+                txtObjectCaption.setText(objectName);
                 tblSaburiTools.getItems().clear();
             });
             btnImport.setOnAction(e -> {
@@ -130,8 +132,9 @@ public class SaburiJavaFXToolsController implements Initializable {
                 String path = txtFileName.getText();
                 File file = new File(path);
                 String fileName = file.getName();
-                String tokens = fileName.substring(0, fileName.length() - 4);
-                txtObjectName.setText(fileName.substring(0, fileName.length() - 4));
+                String objectName = fileName.substring(0, fileName.length() - 4);
+                txtObjectName.setText(objectName);
+                txtObjectCaption.setText(objectName);
                 btnSave.visibleProperty().bind(Bindings.size(tblSaburiTools.getItems()).greaterThan(0));
 
             });
@@ -158,7 +161,6 @@ public class SaburiJavaFXToolsController implements Initializable {
                 }
 
             });
-            
 
             btnOutputDirectory.setOnAction(e -> FXUIUtils.browseDirectory(txtOutputDirectory));
             btnGenerate.setOnAction(e -> this.generateCode());
@@ -370,7 +372,7 @@ public class SaburiJavaFXToolsController implements Initializable {
             tblSaburiTools.refresh();
         });
     }
-    
+
     private void editEnumClass() {
 
         tbcEnumClass.setOnEditCommit(event -> {
@@ -405,6 +407,7 @@ public class SaburiJavaFXToolsController implements Initializable {
     private void generateCode() {
         try {
             String objectName = txtObjectName.getText();
+            String objectCaption = txtObjectCaption.getText();
             String outPutDirecory = txtOutputDirectory.getText();
 
             if (isNullOrEmpty(objectName)) {
@@ -454,8 +457,8 @@ public class SaburiJavaFXToolsController implements Initializable {
             String vwcontrollerFileContent = new ViewController(objectName).makeClass();
             String fxmlFileContent = new UIEdit(objectName, fields).create();
             String fxmlTBFileContent = new UIView(objectName, fields).create();
-            String menuFIleContents = Menu.makeMenu(objectName, cboMenuType.getValue(), txtParentMenuID.getText());
-            String sqlFileContents = SQLFile.callEditAccessObject(objectName);
+            String menuFIleContents = Menu.makeMenu(objectName, objectCaption, cboMenuType.getValue(), txtParentMenuID.getText());
+            String sqlFileContents = SQLFile.callEditAccessObject(objectName, objectCaption);
 
             if (Utilities.hasHelper(fields)) {
                 sqlFileContents += SQLFile.callEditIDGenerator(objectName);
@@ -543,5 +546,4 @@ public class SaburiJavaFXToolsController implements Initializable {
     }
 
 //    
-
 }
