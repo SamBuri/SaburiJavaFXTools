@@ -2,10 +2,10 @@
 <java version="1.8.0_221" class="java.beans.XMLDecoder">
  <object class="Model.Settings">
   <void property="lineBreak">
-   <int>12</int>
+   <int>10</int>
   </void>
   <void property="miniLineBreak">
-   <int>5</int>
+   <int>3</int>
   </void>
  </object>
 </java>

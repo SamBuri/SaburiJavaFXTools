@@ -4,10 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/Controller.java</file>
-            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/SaburiJavaFXToolsController.java</file>
-            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/SQLFile.java</file>
-            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/SaburiJavaFXTools.fxml</file>
-            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/Menu.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/Model/Field.java</file>
+            <file>file:/C:/Saburi/Saburi%20Projects/SaburiJavaFXTools/src/saburijavafxtools/UIEdit.java</file>
         </group>
     </open-files>
 </project-private>

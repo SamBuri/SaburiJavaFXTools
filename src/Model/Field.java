@@ -1055,7 +1055,6 @@ public class Field {
 
 //        ***********************************************************************************************
         if (getSaburiKey().equalsIgnoreCase(Saburikeys.ID_Generator.name())) {
-            addIfNotExists(list, "import static utils.Utilities.isNullOrEmpty");
             if (isReferance() && !getEnumerated()) {
                 addIfNotExists(list, "import dbaccess." + getReferencesDA());
             }
@@ -1357,7 +1356,7 @@ public class Field {
                 line += "minWidth=\"100\" promptText = \"Enter " + getCaption() + "\"/>";
                 break;
             case TextArea:
-                line += "minWidth=\"100\" promptText = \"Enter " + getCaption() + "\"/>";
+                line += "prefWidth=\"100\" prefHeight=\"50\" promptText = \"Enter " + getCaption() + "\"/>";
                 break;
             case TableView:
                 return "";
