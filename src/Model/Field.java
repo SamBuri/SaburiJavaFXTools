@@ -1590,7 +1590,7 @@ public class Field {
                 + "            if (selectedItems.isEmpty() || selectedItems.size() > 1) {\n"
                 + "                return;\n"
                 + "            }\n"
-                + "            " + getReferencesDA() + " " + getVariableName() + "DA = (" + getReferencesDA() + ") getSelectedItem(new " + getReferencesDA() + "(), \"View\", \"" + getFieldName() + "\", 400, 450, " + getControlName() + ", false);\n"
+                + "            " + getReferencesDA() + " " + getVariableName() + "DA = (" + getReferencesDA() + ") getSelectedItem(new " + getReferencesDA() + "(), \"" + getReferences() + "\", \"" + getCaption()+ "\", 400, 450, " + getControlName() + ", false);\n"
                 + "\n"
                 + "            if (" + getVariableName() + "DA == null) {\n"
                 + "                return;\n"
